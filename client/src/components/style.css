@@ -1,0 +1,9 @@
+.input .Mui-focused {
+  border-color: "red";
+  padding: 200px;
+}
+
+.input:focus {
+  border-color: "red";
+  padding: 200px;
+}
