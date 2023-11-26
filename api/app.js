@@ -1,19 +1,27 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-dotenv.config();
+
+const morgan = require("morgan");
+
+const userRouter = require("./routes/userRoute");
+const authRouter = require("./routes/authRoute");
+const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 
-mongoose
-  .connect(process.env.MONGO_DB_URL)
-  .then(() => {
-    console.log("Connected to database");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+app.use(morgan("dev"));
 
-app.listen(3000, () => {
-  console.log("Server is listening");
+app.use(express.json());
+
+app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
+
+app.all("*", (req, res, next) => {
+  const err = new Error(`Can't find ${req.originalUrl} on this server`);
+  err.status = "fail";
+  err.statusCode = 404;
+
+  next(err);
 });
+
+app.use(globalErrorHandler);
+module.exports = app;
