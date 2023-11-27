@@ -21,6 +21,7 @@ import {
   signInStart,
   signInSuccess,
 } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 const StyledContainer = styled(Container)({
   padding: "2.4rem 1.6rem",
@@ -157,7 +158,7 @@ function SignIn() {
           <StyledButton variant="contained" type="submit" disabled={loading}>
             {loading ? "Submitting" : "Sign In"}
           </StyledButton>
-          <StyledButton variant="contained">Continue With Google</StyledButton>
+          <OAuth />
           <Text>
             <span>Don&apos;t have an account? </span>
             <Link to="/sign-up">Sign up</Link>

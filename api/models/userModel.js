@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    avatar: {
+      type: String,
+      default:
+        "https://toppng.com/uploads/preview/instagram-default-profile-picture-11562973083brycehrmyv.png",
+    },
   },
   { timestamps: true }
 );

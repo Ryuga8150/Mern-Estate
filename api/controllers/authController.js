@@ -68,3 +68,35 @@ exports.signin = catchAsync(async (req, res, next) => {
 
   createSendToken(user, 200, res);
 });
+
+const generatePassword = function (digits) {
+  return Math.random().toString(36).slice(-digits);
+};
+
+exports.google = catchAsync(async (req, res, next) => {
+  const { name, email, photo } = req.body;
+
+  const user = await User.findOne({ email });
+  if (user) {
+    console.log("User exists");
+    createSendToken(user, 200, res);
+  } else {
+    // we have set password as required in model
+    // so for signin with google we generate a random password for user
+    // which later can be changed by the user if he wants
+
+    // 36 means numbers from 0 to 9 and from 'A' to 'Z' characters
+    console.log("Creating User");
+    const generatedPassword = generatePassword(8) + generatePassword(8);
+    // -8 for last 8 digits. 16 character password which is very secure
+
+    const newUser = await User.create({
+      username: name.split(" ").join("").toLowerCase() + generatePassword(4),
+      email,
+      password: generatedPassword,
+      avatar: photo,
+    });
+    // console.log(newUser);
+    createSendToken(newUser, 200, res);
+  }
+});
