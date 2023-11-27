@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   createTheme,
   responsiveFontSizes,
@@ -11,7 +11,6 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import About from "./pages/About";
-import Header from "./components/Header";
 // import { LinkProps } from "@mui/material/Link";
 import AppLayout from "./components/AppLayout";
 
@@ -24,7 +23,8 @@ function App() {
         <Container maxWidth="lg">
           {/* <RouterProvider router={router} /> */}
           <Routes>
-            <Route path="/" element={<AppLayout />}>
+            <Route element={<AppLayout />}>
+              <Route index element={<Navigate replace to="home" />} />
               <Route path="home" element={<Home />} />
               <Route path="about" element={<About />} />
               <Route path="sign-in" element={<SignIn />} />
