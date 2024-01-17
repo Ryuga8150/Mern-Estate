@@ -7,10 +7,11 @@ import {
   Stack,
   TextField,
   Typography,
+  Link,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -34,11 +35,11 @@ const Heading = styled(Typography)({
 const StyledButton = styled(Button)({
   fontSize: "1.2rem",
   padding: "0.8rem 1.6rem",
-  backgroundColor: red[400],
+  // backgroundColor: red[400],
 
-  "&:hover": {
-    backgroundColor: red[700],
-  },
+  // "&:hover": {
+  //   backgroundColor: red[700],
+  // },
   borderRadius: "13px",
 });
 const Text = styled(Typography)({
@@ -131,6 +132,18 @@ function SignIn() {
             id="outlined-basic"
             variant="outlined"
             placeholder="Email"
+            sx={{
+              "& .MuiInputBase-root:hover, & .MuiInputBase-root.Mui-focused": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "solid 2px",
+                  borderColor: "brandColor.main",
+                },
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "solid 2px",
+                borderColor: "brandColor.light2",
+              },
+            }}
             {...register("email")}
             disabled={isSubmitting}
           />
@@ -139,6 +152,19 @@ function SignIn() {
             id="outlined-adornment-password"
             variant="outlined"
             placeholder="Password"
+            sx={{
+              "& .MuiInputBase-root:hover, & .MuiInputBase-root.Mui-focused": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "solid 2px",
+                  borderColor: "brandColor.main",
+                },
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "solid 2px",
+                borderColor: "brandColor.light2",
+              },
+              marginBottom: 22,
+            }}
             {...register("password")}
             type={showPassword ? "text" : "password"}
             endAdornment={
@@ -155,13 +181,38 @@ function SignIn() {
             }
           />
 
-          <StyledButton variant="contained" type="submit" disabled={loading}>
+          <StyledButton
+            variant="contained"
+            type="submit"
+            disabled={loading}
+            sx={{
+              borderWidth: 1.5,
+              bgcolor: "primary.main",
+              color: "brandColor.main",
+              border: "solid 1px",
+              borderColor: "brandColor.light2",
+
+              "&:hover": {
+                borderColor: "brandColor.main",
+                bgcolor: "brandColor.light1",
+              },
+            }}
+          >
             {loading ? "Submitting" : "Sign In"}
           </StyledButton>
+
           <OAuth />
           <Text>
             <span>Don&apos;t have an account? </span>
-            <Link to="/sign-up">Sign up</Link>
+            <Link
+              component={RouterLink}
+              to="/sign-up"
+              color="brandColor.main"
+              variant="h6"
+              underline="hover"
+            >
+              Sign up
+            </Link>
           </Text>
         </Stack>
       </form>

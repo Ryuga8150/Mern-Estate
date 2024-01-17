@@ -1,5 +1,5 @@
-import { Container } from "@mui/material";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   createTheme,
   responsiveFontSizes,
@@ -13,25 +13,46 @@ import SignUp from "./pages/SignUp";
 import About from "./pages/About";
 // import { LinkProps } from "@mui/material/Link";
 import AppLayout from "./components/AppLayout";
-
+import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
+// FF9900
 function App() {
-  let theme = createTheme();
+  let theme = createTheme({
+    palette: {
+      primary: {
+        main: "#fff",
+      },
+      secondary: {
+        main: "#1B1B1B",
+      },
+      brandColor: {
+        main: "#0066FF",
+        light1: "#e6f0ff",
+        light2: "#80b3ff",
+        dark: "#0052cc",
+      },
+    },
+  });
+  const queryClient = new QueryClient();
   theme = responsiveFontSizes(theme);
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <Container maxWidth="lg">
-          {/* <RouterProvider router={router} /> */}
-          <Routes>
-            <Route element={<AppLayout />}>
-              <Route index element={<Navigate replace to="home" />} />
-              <Route path="home" element={<Home />} />
-              <Route path="about" element={<About />} />
-              <Route path="sign-in" element={<SignIn />} />
-              <Route path="sign-up" element={<SignUp />} />
+        <QueryClientProvider client={queryClient}></QueryClientProvider>
+        {/* <RouterProvider router={router} /> */}
+        <Routes>
+          <Route element={<AppLayout />}>
+            {/* <Route index element={<Navigate replace to="home" />} /> */}
+            <Route path="/" element={<Home />} />
+            {/* <Route path="home" element={<Home />} /> */}
+            <Route path="about" element={<About />} />
+            <Route path="sign-in" element={<SignIn />} />
+            <Route path="sign-up" element={<SignUp />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="profile" element={<Profile />} />
             </Route>
-          </Routes>
-        </Container>
+          </Route>
+        </Routes>
         <Toaster
           position="top-center"
           reverseOrder={false}

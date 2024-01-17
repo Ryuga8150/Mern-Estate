@@ -43,15 +43,7 @@ exports.signup = catchAsync(async (req, res) => {
   console.log("In Signup");
   const newUser = await User.create(req.body);
   // const newUser = "no";
-
-  console.log(newUser);
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      data: newUser,
-    },
-  });
+  createSendToken(newUser, 200, res);
 });
 
 exports.signin = catchAsync(async (req, res, next) => {
@@ -68,6 +60,16 @@ exports.signin = catchAsync(async (req, res, next) => {
 
   createSendToken(user, 200, res);
 });
+
+exports.logout = (req, res) => {
+  
+  res.cookie("jwt", "loggedout", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({ status: "success" });
+};
 
 const generatePassword = function (digits) {
   return Math.random().toString(36).slice(-digits);

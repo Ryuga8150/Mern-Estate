@@ -4,19 +4,18 @@ import {
   Container,
   IconButton,
   InputAdornment,
-  OutlinedInput,
+  Link,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { red } from "@mui/material/colors";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
-
+import GoogleIcon from "@mui/icons-material/Google";
 const StyledContainer = styled(Container)({
   padding: "2.4rem 1.6rem",
 });
@@ -28,29 +27,13 @@ const Heading = styled(Typography)({
 const StyledButton = styled(Button)({
   fontSize: "1.2rem",
   padding: "0.8rem 1.6rem",
-  backgroundColor: red[400],
 
-  "&:hover": {
-    backgroundColor: red[700],
-  },
   borderRadius: "13px",
 });
 const Text = styled(Typography)({
   fontSize: "1.2rem",
 });
 
-const StyledTextField = styled(TextField)({
-  // border: `solid 100px ${red[700]}`,
-  // padding: "1.2rem",
-  "& .MuiInputBase-root:hover": {
-    // backgroundColor: "green",
-    // borderColor: red[400],
-  },
-  "& .MuiOutlinedInput-notchedOutline:hover": {
-    // borderColor: red[400],
-    border: 0,
-  },
-});
 function SignUp() {
   const {
     register,
@@ -116,13 +99,25 @@ function SignUp() {
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <Stack spacing={2}>
           <Heading>Sign Up</Heading>
-          <StyledTextField
+          <TextField
             id="outlined-basic"
             variant="outlined"
             placeholder="Username"
             {...register("username")}
-            error
-            helperText={"This is a helper text"}
+            // error
+            // helperText={"This is a helper text"}
+            sx={{
+              "& .MuiInputBase-root:hover, & .MuiInputBase-root.Mui-focused": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "solid 2px",
+                  borderColor: "brandColor.main",
+                },
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "solid 2px",
+                borderColor: "brandColor.light2",
+              },
+            }}
           />
           <TextField
             id="outlined-basic"
@@ -130,11 +125,35 @@ function SignUp() {
             placeholder="Email"
             {...register("email")}
             disabled={isSubmitting}
+            sx={{
+              "& .MuiInputBase-root:hover, & .MuiInputBase-root.Mui-focused": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "solid 2px",
+                  borderColor: "brandColor.main",
+                },
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "solid 2px",
+                borderColor: "brandColor.light2",
+              },
+            }}
           />
           <TextField
             // id="outlined-basic"
             id="outlined-adornment-password"
             variant="outlined"
+            sx={{
+              "& .MuiInputBase-root:hover, & .MuiInputBase-root.Mui-focused": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "solid 2px",
+                  borderColor: "brandColor.main",
+                },
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "solid 2px",
+                borderColor: "brandColor.light2",
+              },
+            }}
             placeholder="Password"
             {...register("password")}
             // sx={{
@@ -166,13 +185,51 @@ function SignUp() {
             variant="contained"
             type="submit"
             disabled={isSubmitting}
+            sx={{
+              borderWidth: 1.5,
+              bgcolor: "primary.main",
+              color: "brandColor.main",
+              border: "solid 1px",
+              borderColor: "brandColor.light2",
+
+              "&:hover": {
+                borderColor: "brandColor.main",
+                bgcolor: "brandColor.light1",
+              },
+            }}
           >
             {isSubmitting ? "Submitting" : "Sign Up"}
           </StyledButton>
-          <StyledButton variant="contained">Continue With Google</StyledButton>
+          <StyledButton
+            variant="contained"
+            type="button"
+            sx={{
+              borderWidth: 1.5,
+              color: "primary.main",
+              bgcolor: "brandColor.main",
+              border: "solid 1px",
+              borderColor: "brandColor.main",
+              "&:hover": {
+                bgcolor: "brandColor.dark",
+              },
+              display: "flex",
+              gap: 1,
+            }}
+          >
+            <span>Continue With Google</span>
+            <GoogleIcon sx={{ paddingLeft: 0 }} />
+          </StyledButton>
           <Text>
             <span>Have an account? </span>
-            <Link to="/sign-in">Sign in</Link>
+            <Link
+              component={RouterLink}
+              to="/sign-in"
+              color="brandColor.main"
+              variant="h6"
+              underline="hover"
+            >
+              Sign in
+            </Link>
           </Text>
         </Stack>
       </form>

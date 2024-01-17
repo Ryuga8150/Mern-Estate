@@ -4,17 +4,18 @@ const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: true,
+      required: [true, "A user must have a name"],
       unique: true,
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "A user must have an email"],
       unique: true,
+      lowercase: true,
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "A password is required"],
     },
     avatar: {
       type: String,
@@ -37,6 +38,7 @@ userSchema.methods.correctPassword = async function (
 ) {
   return await bcryptJS.compareSync(candidatePassword, userPassword);
 };
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
