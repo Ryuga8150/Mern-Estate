@@ -35,6 +35,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+
 import { app } from "../firebase";
 import { toast } from "react-hot-toast";
 
@@ -357,7 +358,13 @@ function Profile() {
               },
             }}
           >
-            Create Listing
+            <Link
+              component={RouterLink}
+              to="/create-listing"
+              underline={"none"}
+            >
+              Create Listing
+            </Link>
           </StyledButton>
 
           <Stack

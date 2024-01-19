@@ -11,6 +11,7 @@ import { grey } from "@mui/material/colors";
 const StyledContainer = styled(Container)({
   // backgroundColor: "#fdfdfd",
   backgroundColor: "#fff",
+  // backgroundColor: "#fafafa",
   height: "100vh",
   margin: "0 auto",
 });

@@ -9,7 +9,6 @@ import {
   Typography,
   Link,
 } from "@mui/material";
-import { red } from "@mui/material/colors";
 
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";

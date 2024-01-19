@@ -15,6 +15,7 @@ import About from "./pages/About";
 import AppLayout from "./components/AppLayout";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreateListing from "./pages/CreateListing";
 // FF9900
 function App() {
   let theme = createTheme({
@@ -50,6 +51,7 @@ function App() {
             <Route path="sign-up" element={<SignUp />} />
             <Route element={<ProtectedRoute />}>
               <Route path="profile" element={<Profile />} />
+              <Route path="create-listing" element={<CreateListing />} />
             </Route>
           </Route>
         </Routes>
