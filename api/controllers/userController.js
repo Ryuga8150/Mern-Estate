@@ -1,6 +1,7 @@
 const bcryptjs = require("bcryptjs");
 
 const User = require("../models/userModel");
+const Listing = require("../models/listModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
@@ -60,5 +61,19 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: "success",
     data: null,
+  });
+});
+
+exports.getUserListings = catchAsync(async (req, res, next) => {
+  if (req.params.id !== req.user.id)
+    return next(new AppError("You can only delete your own acount!", 401));
+
+  const listings = await Listing.find({ userRef: req.user.id });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      listings,
+    },
   });
 });

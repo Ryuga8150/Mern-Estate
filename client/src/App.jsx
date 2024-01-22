@@ -16,6 +16,7 @@ import AppLayout from "./components/AppLayout";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateListing from "./pages/CreateListing";
+import UpdateListing from "./pages/UpdateListing";
 // FF9900
 function App() {
   let theme = createTheme({
@@ -52,6 +53,10 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="profile" element={<Profile />} />
               <Route path="create-listing" element={<CreateListing />} />
+              <Route
+                path="update-listing/:listingID"
+                element={<UpdateListing />}
+              />
             </Route>
           </Route>
         </Routes>

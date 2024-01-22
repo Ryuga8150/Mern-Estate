@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Controller } from "react-hook-form";
 
 const StyledTextField = styled(TextField)((props) => ({
   "&:hover .MuiFormLabel-root": {
@@ -59,10 +60,22 @@ const StyledOutlinedInput = styled(OutlinedInput)((props) => ({
 
 ListingForm.propTypes = {
   onRegister: Function,
+  onGetValues: Function,
   // onHandleSubmit: Function,
+  isUpdatePage: String,
+  onControl: Object,
 };
 
-function ListingForm({ onRegister: register }) {
+function ListingForm({
+  onRegister: register,
+  onGetValues: getValues,
+  isUpdatePage = false,
+  onControl: control,
+}) {
+  // console.log(getValues("sell"));
+
+  // console.log(isUpdatePage);
+  // console.log(control);
   return (
     <Stack
       sx={{
@@ -81,12 +94,14 @@ function ListingForm({ onRegister: register }) {
         label="Name"
         variant="outlined"
         {...register("name")}
+        InputLabelProps={{ shrink: isUpdatePage }}
       />
       <StyledTextField
         id="outlined-basic"
         label="Description"
         variant="outlined"
         {...register("description")}
+        InputLabelProps={{ shrink: isUpdatePage }}
       />
       <StyledTextField
         id="outlined-basic"
@@ -94,34 +109,46 @@ function ListingForm({ onRegister: register }) {
         multiline
         rows={4}
         variant="outlined"
+        // defaultValue={getValues("address")}
+        // value={getValues("address")}
+        InputLabelProps={{ shrink: isUpdatePage }}
+        // defaultValue={"paras"}
         {...register("address")}
       />
+
       <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap" }}>
-        <FormControlLabel
-          control={<StyledCheckbox />}
-          label="Sell"
-          {...register("sell")}
-        />
-        <FormControlLabel
-          control={<StyledCheckbox />}
-          label="Rent"
-          {...register("rent")}
-        />
-        <FormControlLabel
-          control={<StyledCheckbox />}
-          label="Parking Spot"
-          {...register("parking")}
-        />
-        <FormControlLabel
-          control={<StyledCheckbox />}
-          label="Furnished"
-          {...register("furnished")}
-        />
-        <FormControlLabel
-          control={<StyledCheckbox />}
-          label="Offer"
-          {...register("offer")}
-        />
+        {[
+          { name: "sell", label: "Sell" },
+          { name: "rent", label: "Rent" },
+          { name: "parking", label: "Parking Spot" },
+          { name: "furnished", label: "Furnished" },
+          { name: "offer", label: "Offer" },
+        ].map(({ name, label }, ind) => (
+          <Controller
+            key={ind}
+            name={name}
+            control={control}
+            render={({ field }) => {
+              console.log(field);
+              return (
+                <FormControlLabel
+                  control={
+                    <StyledCheckbox
+                      defaultValue={getValues(name)}
+                      defaultChecked={getValues(name)}
+                      color="primary"
+                      onChange={(e) => field.onChange(e.target.checked)}
+                      checked={field.value || false}
+                      value={field.value || false}
+                      // default values are required to let mui know if they are either controlled or uncontrolled during first render
+                    />
+                  }
+                  label={label}
+                />
+              );
+            }}
+          />
+        ))}
       </Stack>
       <Stack direction="row" spacing={2}>
         <FormControlLabel
@@ -164,7 +191,7 @@ function ListingForm({ onRegister: register }) {
         variant="contained"
         sx={{ bgcolor: "brandColor.main" }}
       >
-        Submit
+        {isUpdatePage ? "Update" : "Submit"}
       </Button>
     </Stack>
   );

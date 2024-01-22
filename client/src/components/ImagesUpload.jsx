@@ -175,6 +175,16 @@ function ImagesUpload({
     setValue("imageUrls", newImageUrls);
   };
 
+  const handleSwapToMainImage = function (ind) {
+    let imgArr = getValues("imageUrls");
+    // console.log(imgArr);
+    let temp = imgArr[0];
+    imgArr[0] = imgArr[ind];
+    imgArr[ind] = temp;
+    // console.log(imgArr);
+    // i think weird behaviour while consolling seems likes no swapping but there is swapping
+    setValue("imageUrls", imgArr);
+  };
   useEffect(
     function () {
       if (imageUploadError) {
@@ -218,7 +228,7 @@ function ImagesUpload({
         rowHeight={100}
         gap={8}
       >
-        {itemData.map((item) => (
+        {itemData.map((item, ind) => (
           <ImageListItem
             key={item.img}
             cols={item.cols || 1}
@@ -234,6 +244,7 @@ function ImagesUpload({
                 },
               },
             }}
+            onClick={() => handleSwapToMainImage(ind)}
           >
             <img
               {...srcset(item.img, 80, item.rows, item.cols)}

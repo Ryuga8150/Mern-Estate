@@ -38,6 +38,7 @@ import {
 
 import { app } from "../firebase";
 import { toast } from "react-hot-toast";
+import ListingDrawer from "../components/ListingDrawer";
 
 const StyledContainer = styled(Container)({
   padding: "2.4rem 1.6rem",
@@ -188,6 +189,7 @@ function Profile() {
       dispatch(updateUserFailure(err.message));
     }
   };
+
   useEffect(
     function () {
       if (file) {
@@ -197,6 +199,7 @@ function Profile() {
     },
     [file]
   );
+
   useEffect(
     function () {
       if (error) {
@@ -370,6 +373,7 @@ function Profile() {
           <Stack
             direction="row"
             justifyContent={"space-between"}
+            alignItems="center"
             // sx={{ mt: 100 }}
           >
             <Link
@@ -383,6 +387,7 @@ function Profile() {
             >
               Delete Account
             </Link>
+            <ListingDrawer />
             <Link
               color="brandColor.main"
               variant="h6"
