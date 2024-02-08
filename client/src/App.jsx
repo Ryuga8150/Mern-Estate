@@ -17,6 +17,8 @@ import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateListing from "./pages/CreateListing";
 import UpdateListing from "./pages/UpdateListing";
+import Listing from "./pages/Listing";
+import Search from "./pages/Search/";
 // FF9900
 function App() {
   let theme = createTheme({
@@ -43,13 +45,15 @@ function App() {
         <QueryClientProvider client={queryClient}></QueryClientProvider>
         {/* <RouterProvider router={router} /> */}
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route element={<AppLayout />}>
             {/* <Route index element={<Navigate replace to="home" />} /> */}
-            <Route path="/" element={<Home />} />
             {/* <Route path="home" element={<Home />} /> */}
-            <Route path="about" element={<About />} />
-            <Route path="sign-in" element={<SignIn />} />
-            <Route path="sign-up" element={<SignUp />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/listing/:listingID" element={<Listing />} />
+            <Route path="/search" element={<Search />} />
             <Route element={<ProtectedRoute />}>
               <Route path="profile" element={<Profile />} />
               <Route path="create-listing" element={<CreateListing />} />

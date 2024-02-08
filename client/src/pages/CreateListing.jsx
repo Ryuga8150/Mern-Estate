@@ -7,13 +7,16 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import toast from "react-hot-toast";
+import TempForm from "../components/TempForm";
+import TempImagesUpload from "../components/TempImagesUpload";
 
 const StyledContainer = styled(Container)({
-  padding: "2.4rem 1.6rem",
+  padding: "1.2rem 1.6rem 2.4rem 1.6rem",
   // backgroundColor: "orangered",
   // height: "calc(100vh - 10.72rem)",
   height: "calc(100% - 107.188px)",
   // height: "100%",
+  backgroundColor: "#FAFAFA",
 });
 
 function CreateListing() {
@@ -72,21 +75,30 @@ function CreateListing() {
       console.log(err);
     }
   };
+  // <Stack direction="row" spacing={2} sx={{ height: "100%" }}>
   return (
     <StyledContainer>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack direction="row" spacing={2} sx={{ height: "100%" }}>
-          <ListingForm
+        <Box
+          sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: 2 }}
+        >
+          {/* <ListingForm
             onRegister={register}
             onGetValues={getValues}
             onControl={control}
-          />
-          <ImagesUpload
+          /> */}
+          <TempForm />
+          {/* <ImagesUpload
+            onSetValue={setValue}
+            onGetValues={getValues}
+            onWatch={watch}
+          /> */}
+          <TempImagesUpload
             onSetValue={setValue}
             onGetValues={getValues}
             onWatch={watch}
           />
-        </Stack>
+        </Box>
       </form>
     </StyledContainer>
   );

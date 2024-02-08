@@ -9,4 +9,6 @@ router.delete("/delete/:id", verifyToken, listController.deleteListing);
 router.post("/update/:id", verifyToken, listController.updateListing);
 // router.get("/get", listController.getListings);
 router.get("/get/:id", listController.getListing);
+router.get('/get',listController.getListings);
+
 module.exports = router;

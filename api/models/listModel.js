@@ -49,10 +49,12 @@ const listSchema = new mongoose.Schema(
     type: {
       type: String,
       required: [true, "A listing must have a type"],
+      enum: ["rent", "sell"],
+      message: "Type is either rent or sell",
     },
     offer: {
       type: Boolean,
-      required: [true, "A listing must have an offer"],
+      // required: [true, "A listing must have an offer"],
     },
     imageUrls: {
       type: Array,
