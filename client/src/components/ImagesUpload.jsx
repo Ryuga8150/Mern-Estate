@@ -11,9 +11,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { app } from "../firebase";
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -22,7 +23,7 @@ import {
 import { toast } from "react-hot-toast";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 function srcset(image, size, rows = 1, cols = 1) {
   return {
     src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
@@ -59,31 +60,19 @@ const StyledDiv = styled("div")({
   padding: 8,
   borderRadius: 4,
   border: "dashed 2px",
-  borderColor: "red",
+  borderColor: "#7A7A7A",
   width: "100%",
   height: "100%",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   flexDirection: "column",
-
-  "& span:first-child": {
-    color: "red",
-    fontSize: "3rem",
-    marginTop: "-2px",
-  },
-
-  "& span:last-child": {
-    color: "red",
-    fontSize: "1.2rem",
-    textAlign: "center",
-  },
 });
 
 ImagesUpload.propTypes = {
-  onSetValue: Function,
-  onGetValues: Function,
-  onWatch: Function,
+  onSetValue: PropTypes.func,
+  onGetValues: PropTypes.func,
+  onWatch: PropTypes.func,
 };
 
 function ImagesUpload({
@@ -94,8 +83,8 @@ function ImagesUpload({
   const [files, setFiles] = useState([]);
   // const [formData, setFormData] = useState({ imageUrls: [] });
   const [imageUploadError, setImageUploadError] = useState(null);
-
-  console.log(files);
+  const imageUploadButton = useRef(null);
+  // console.log(files);
   watch("imageUrls");
   // console.log(formData);
 
@@ -160,19 +149,32 @@ function ImagesUpload({
       });
   };
 
-  const handleImageDelete = function (imgUrlDelete) {
-    console.log(imgUrlDelete);
-    // const newImageUrls = formData.imageUrls.filter(
-    //   (imgUrl) => imgUrl !== imgUrlDelete
-    // );
-    // console.log(newFormData);
-    // setFormData({ ...formData, imageUrls: newImageUrls });
+  const handleImageDelete = async function (imgUrlDelete) {
+    try {
+      console.log(imgUrlDelete);
 
-    // With React Hook Form
-    const newImageUrls = getValues("imageUrls").filter(
-      (imgUrl) => imgUrl !== imgUrlDelete
-    );
-    setValue("imageUrls", newImageUrls);
+      const storage = getStorage();
+
+      // Create a reference to the file to delete
+      const desertRef = ref(storage, imgUrlDelete);
+
+      // Delete the file
+      await deleteObject(desertRef);
+      console.log("File deleted successfully");
+      // const newImageUrls = formData.imageUrls.filter(
+      //   (imgUrl) => imgUrl !== imgUrlDelete
+      // );
+      // console.log(newFormData);
+      // setFormData({ ...formData, imageUrls: newImageUrls });
+
+      // With React Hook Form
+      const newImageUrls = getValues("imageUrls").filter(
+        (imgUrl) => imgUrl !== imgUrlDelete
+      );
+      setValue("imageUrls", newImageUrls);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleSwapToMainImage = function (ind) {
@@ -219,43 +221,84 @@ function ImagesUpload({
         width: "100%",
         height: "calc(100vh - 110px - 3.6rem)",
         bgcolor: "#fff",
-        padding: "1.2rem 1.2rem 1.6rem 1.2rem",
+        padding: "1.2rem 0.2rem 1.6rem 0.2rem",
         borderRadius: 3,
         border: "solid 1.5px",
         borderColor: "#EEEEEE",
       }}
     >
-      <Typography
-        variant="h2"
-        sx={{ fontSize: { md: "2rem" }, fontWeight: 700, mb: 2 }}
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ padding: "0 1rem", mb: 2 }}
       >
-        Property Images
-      </Typography>
-      <ImageList
+        <Typography
+          variant="h2"
+          sx={{
+            fontSize: { md: "2rem" },
+            fontWeight: 700,
+          }}
+        >
+          Property Images
+        </Typography>
+        <Button
+          variant="contained"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            bgcolor: "brandColor.main",
+            padding: "0.4rem 0.8rem",
+            borderRadius: 1.5,
+            "&:hover": {
+              borderColor: "brandColor.main",
+              bgcolor: "rgb(0, 102, 255,0.9)",
+            },
+            mr: 2.2,
+          }}
+          onClick={handleImageUpload}
+        >
+          <CloudUploadOutlinedIcon sx={{ color: "primary.main" }} />
+          <Typography sx={{ ml: 1, color: "primary.main" }}>Upload</Typography>
+        </Button>
+      </Stack>
+      <Box
         sx={{
-          // width: "100%",
-          height: "30rem",
+          display: "grid",
+          gridTemplateColumns: "repeat(3,1fr)",
+          // gridTemplateRows: "repeat(3,1fr)",
+          gridAutoRows: "8rem",
+          columnGap: 2,
+          rowGap: 1.8,
+          height: "27.3rem",
+          overflowY: "scroll",
+
+          padding: "1rem",
+          // ...(itemData.length > 3 && { overflowY: "scroll" }),
         }}
-        variant="quilted"
-        cols={3}
-        rowHeight={100}
-        gap={8}
       >
         {itemData.map((item, ind) => (
           <ImageListItem
             key={item.img}
-            cols={item.cols || 1}
-            rows={item.rows || 1}
+            // cols={3 || 1}
+            // rows={1}
+            // rows={item.rows || 1}
             sx={{
               borderRadius: 2,
 
               overflow: "hidden",
-
+              border: "solid 0.3px rgb(122, 122, 122,0.3)",
               "&:hover": {
                 "& .MuiImageListItemBar-root": {
                   position: "absolute",
                 },
               },
+              ...(ind === 0 && { gridColumn: "span 3" }),
+              ...(ind === 0 && { gridRow: "span 2" }),
+
+              ...(ind !== 0 && { gridColumn: "span 1" }),
+              ...(ind !== 0 && { gridRow: "span 1" }),
+              // ...(ind === 0 && { gridRow: 1 / 2 }),
             }}
             onClick={() => handleSwapToMainImage(ind)}
           >
@@ -275,7 +318,7 @@ function ImagesUpload({
                   position: "absolute",
                 },
               }}
-              title={item.title}
+              title={`Image ${ind + 1}`}
               position="top"
               actionIcon={
                 <IconButton
@@ -293,28 +336,46 @@ function ImagesUpload({
         ))}
         <ImageListItem
           key="upload-img"
-          cols={1}
-          rows={1.5}
-          sx={{ borderRadius: 2, overflow: "hidden" }}
+          // cols={1}
+          // rows={1.5}
+          sx={{ borderRadius: 2 }}
         >
-          <StyledDiv>
+          <StyledDiv onClick={() => imageUploadButton.current.click()}>
             <input
               onChange={(e) => setFiles(e.target.files)}
               type="file"
               id="images"
               accept="image/*"
+              style={{ display: "none" }}
               multiple
+              ref={imageUploadButton}
               // {...register("imageUrls.0")}
             />
-            <span>+</span>
-            <span>Add Property Image</span>
+            <Typography
+              variant="h3"
+              textAlign="center"
+              sx={{
+                color: "#7A7A7A",
+                fontSize: "3rem",
+                marginTop: -0.5,
+                fontWeight: 500,
+              }}
+            >
+              +
+            </Typography>
+            <Typography
+              sx={{
+                color: "#7a7a7a",
+                fontSize: { md: "1.1rem" },
+                marginTop: -0.3,
+              }}
+              textAlign="center"
+            >
+              Add Property Image
+            </Typography>
           </StyledDiv>
         </ImageListItem>
-      </ImageList>
-
-      <Button onClick={handleImageUpload} variant="contained">
-        Upload
-      </Button>
+      </Box>
     </Box>
   );
 }

@@ -34,12 +34,17 @@ import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
-
+function generate(element) {
+  return [0, 1, 2].map((value) =>
+    React.cloneElement(element, {
+      key: value,
+    })
+  );
+}
 export default function ListingDrawer() {
   const [state, setState] = useState(false);
   const [listings, setListings] = useState(null);
@@ -47,7 +52,25 @@ export default function ListingDrawer() {
   const { user } = currentUser ? currentUser.data : {};
   // console.log(listings);
   const navigate = useNavigate();
-  // console.log(listings);
+  console.log(listings);
+  const handleListings = async function () {
+    try {
+      if (!user._id) {
+        console.log("You are not logged in ");
+        return;
+      }
+      const res = await fetch(`/api/user/listings/${user._id}`);
+      const data = await res.json();
+
+      if (data.status !== "success") {
+        return;
+      }
+      console.log(data);
+      setListings(data.data.listings);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleDeleteListing = async function (deleteListingID) {
     try {
@@ -57,12 +80,10 @@ export default function ListingDrawer() {
       )[0];
       const remaininglistingData = listings.filter(
         (listing) => listing._id !== deleteListingID
-      );
-      // console.log("DEleted");
-      // console.log(deletelistingData);
-      // console.log(listings);
-      // console.log("Remaining");
-      // console.log(remaininglistingData);
+      )[0];
+      console.log(deletelistingData);
+      console.log(listings);
+      console.log(remaininglistingData);
 
       const storage = getStorage(app);
 
@@ -78,16 +99,12 @@ export default function ListingDrawer() {
       // navigate(`/update-listing/${editListingID}`);
       console.log("Images Deleted Successfully");
 
-      await fetch(`/api/listing/delete/${deleteListingID}`, {
+      const res = await fetch(`/api/listing/delete/${deleteListingID}`, {
         method: "DELETE",
       });
-      // console.log(data);
-      // console.log("Before");
-      // console.log(listings);
+      const data = await res.json();
+      console.log(data);
       setListings(remaininglistingData);
-      // console.log("After");
-      // console.log(listings);
-      // setState(false);
       toast.success("Listing Deleted Successfully");
     } catch (err) {
       console.log(err);
@@ -99,32 +116,6 @@ export default function ListingDrawer() {
     navigate(`/update-listing/${editListingID}`);
   };
 
-  useEffect(
-    function () {
-      if (!state) return;
-      const handleListings = async function () {
-        try {
-          if (!user._id) {
-            console.log("You are not logged in ");
-            return;
-          }
-          const res = await fetch(`/api/user/listings/${user._id}`);
-          const data = await res.json();
-
-          if (data.status !== "success") {
-            return;
-          }
-          console.log(data);
-          setListings(data.data.listings);
-        } catch (err) {
-          console.log(err);
-        }
-      };
-
-      handleListings();
-    },
-    [state, setListings, user._id]
-  );
   const toggleDrawer = (event) => {
     if (
       event &&
@@ -223,7 +214,7 @@ export default function ListingDrawer() {
         sx={{ cursor: "pointer" }}
         onClick={() => {
           toggleDrawer();
-          // handleListings();
+          handleListings();
         }}
       >
         Show Listings

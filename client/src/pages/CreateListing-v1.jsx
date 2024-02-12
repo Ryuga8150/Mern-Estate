@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Box, Container } from "@mui/material";
+import { Box, Container, Paper, Stack } from "@mui/material";
 import ListingForm from "../components/ListingForm";
 import ImagesUpload from "../components/ImagesUpload";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import toast from "react-hot-toast";
+import TempForm from "../components/TempForm";
+import TempImagesUpload from "../components/TempImagesUpload";
 
 const StyledContainer = styled(Container)({
   padding: "1.2rem 1.6rem 2.4rem 1.6rem",
@@ -17,43 +19,10 @@ const StyledContainer = styled(Container)({
   backgroundColor: "#FAFAFA",
 });
 
-const filterOptions = (obj) => {
-  let newObj = {};
-  Object.entries(obj).forEach(([key, value]) => {
-    if (value === true) {
-      newObj[key] = value;
-    }
-  });
-  return newObj;
-};
-
 function CreateListing() {
   const { register, handleSubmit, setValue, getValues, watch, control } =
     useForm({
-      defaultValues: {
-        imageUrls: [],
-        benefits: {
-          airport: false,
-          bus: false,
-          metro: false,
-          hospital: false,
-          cityGarden: false,
-          shoppingCentres: false,
-        },
-        facilities: {
-          openFloorPlan: false,
-          water: false,
-          electricity: false,
-          parking: false,
-          kitchen: false,
-          externalLighting: false,
-        },
-        type: "rent",
-        offer: false,
-        facing: "East",
-        bathrooms: 1,
-        bedrooms: 1,
-      },
+      defaultValues: { imageUrls: [] },
     });
 
   const { currentUser } = useSelector((store) => store.user);
@@ -63,43 +32,22 @@ function CreateListing() {
   const navigate = useNavigate();
 
   const onSubmit = async function (formData) {
-    // return;
-    try {
-      console.log(formData);
+    console.log(formData);
 
-      // console.log("END");
+    try {
       const newFormData = {
         ...formData,
-        // discount: +formData.discount,
-        // price: +formData.price,
-        benefits: filterOptions(formData.benefits),
-        facilities: filterOptions(formData.facilities),
-        address: `${formData.address}, ${formData.city}, ${formData.state}`,
-        regularPrice: +formData.regularPrice,
+        bathrooms: +formData.baths,
+        bedrooms: +formData.beds,
+        type: formData.sell ? "sell" : "rent",
         discountPrice: +formData.discountPrice,
-        city: undefined,
-        state: undefined,
+        regularPrice: +formData.regularPrice,
         userRef: user._id,
       };
+      console.log(newFormData);
 
-      const { state, city, ...apiData } = newFormData;
-
-      console.log(apiData);
-      // const newFormData = {
-      //   ...formData,
-      //   bathrooms: +formData.baths,
-      //   bedrooms: +formData.beds,
-      //   type: formData.sell ? "sell" : "rent",
-      //   discountPrice: +formData.discountPrice,
-      //   regularPrice: +formData.regularPrice,
-      //   userRef: user._id,
-      // };
-      // console.log(newFormData);
-
-      // if (newFormData.imageUrls.length === 0) return;
-      // if (newFormData.offer && newFormData.discountPrice === 0) return;
-      if (apiData.imageUrls.length === 0) return;
-      if (apiData.offer && apiData.discountPrice === 0) return;
+      if (newFormData.imageUrls.length === 0) return;
+      if (newFormData.offer && newFormData.discountPrice === 0) return;
 
       console.log("Sending...");
       const res = await fetch("/api/listing/create", {
@@ -107,7 +55,7 @@ function CreateListing() {
         method: "POST",
 
         // Adding body or contents to send
-        body: JSON.stringify(apiData),
+        body: JSON.stringify(newFormData),
 
         // Adding headers to the request
         headers: {
@@ -136,13 +84,22 @@ function CreateListing() {
         <Box
           sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: 2 }}
         >
-          <ListingForm
+          {/* <ListingForm
+            onRegister={register}
+            onGetValues={getValues}
+            onControl={control}
+          /> */}
+          <TempForm
             onRegister={register}
             onGetValues={getValues}
             onControl={control}
           />
-
-          <ImagesUpload
+          {/* <ImagesUpload
+            onSetValue={setValue}
+            onGetValues={getValues}
+            onWatch={watch}
+          /> */}
+          <TempImagesUpload
             onSetValue={setValue}
             onGetValues={getValues}
             onWatch={watch}

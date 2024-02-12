@@ -3,6 +3,7 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
 exports.createListing = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const listing = await Listing.create(req.body);
 
   res.status(201).json({

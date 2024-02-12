@@ -80,13 +80,13 @@ const StyledDiv = styled("div")({
   },
 });
 
-TempImagesUpload.propTypes = {
+ImagesUpload.propTypes = {
   onSetValue: Function,
   onGetValues: Function,
   onWatch: Function,
 };
 
-function TempImagesUpload({
+function ImagesUpload({
   onSetValue: setValue,
   onGetValues: getValues,
   onWatch: watch,
@@ -231,95 +231,7 @@ function TempImagesUpload({
       >
         Property Images
       </Typography>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3,1fr)",
-          gridTemplateRows: "repeat(3,1fr)",
-          columnGap: 2,
-          rowGap: 1.5,
-          height: "25rem",
-          overflowY: "scroll",
-        }}
-      >
-        {itemData.map((item, ind) => (
-          <ImageListItem
-            key={item.img}
-            cols={3 || 1}
-            rows={1}
-            // rows={item.rows || 1}
-            sx={{
-              borderRadius: 2,
-
-              overflow: "hidden",
-
-              "&:hover": {
-                "& .MuiImageListItemBar-root": {
-                  position: "absolute",
-                },
-              },
-              ...(ind === 0 && { gridColumn: "span 3" }),
-              ...(ind === 0 && { gridRow: "span 2" }),
-
-              ...(ind !== 0 && { gridColumn: "span 1" }),
-              ...(ind !== 0 && { gridRow: "span 1" }),
-              // ...(ind === 0 && { gridRow: 1 / 2 }),
-            }}
-            onClick={() => handleSwapToMainImage(ind)}
-          >
-            <img
-              {...srcset(item.img, 80, item.rows, item.cols)}
-              alt={item.title}
-              loading="lazy"
-            />
-            <ImageListItemBar
-              sx={{
-                background:
-                  "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
-                  "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
-                position: "relative",
-
-                "&:hover": {
-                  position: "absolute",
-                },
-              }}
-              title={item.title}
-              position="top"
-              actionIcon={
-                <IconButton
-                  sx={{ color: "white" }}
-                  aria-label={`star ${item.title}`}
-                  onClick={() => handleImageDelete(item.img)}
-                >
-                  {/* <StarBorderIcon /> */}
-                  <DeleteIcon />
-                </IconButton>
-              }
-              actionPosition="right"
-            />
-          </ImageListItem>
-        ))}
-        <ImageListItem
-          key="upload-img"
-          // cols={1}
-          // rows={1.5}
-          sx={{ borderRadius: 2, overflow: "hidden" }}
-        >
-          <StyledDiv>
-            <input
-              onChange={(e) => setFiles(e.target.files)}
-              type="file"
-              id="images"
-              accept="image/*"
-              multiple
-              // {...register("imageUrls.0")}
-            />
-            <span>+</span>
-            <span>Add Property Image</span>
-          </StyledDiv>
-        </ImageListItem>
-      </Box>
-      {/* <ImageList
+      <ImageList
         sx={{
           // width: "100%",
           height: "30rem",
@@ -371,14 +283,34 @@ function TempImagesUpload({
                   aria-label={`star ${item.title}`}
                   onClick={() => handleImageDelete(item.img)}
                 >
-                  
+                  {/* <StarBorderIcon /> */}
                   <DeleteIcon />
                 </IconButton>
               }
               actionPosition="right"
             />
           </ImageListItem>
-        ))} */}
+        ))}
+        <ImageListItem
+          key="upload-img"
+          cols={1}
+          rows={1.5}
+          sx={{ borderRadius: 2, overflow: "hidden" }}
+        >
+          <StyledDiv>
+            <input
+              onChange={(e) => setFiles(e.target.files)}
+              type="file"
+              id="images"
+              accept="image/*"
+              multiple
+              // {...register("imageUrls.0")}
+            />
+            <span>+</span>
+            <span>Add Property Image</span>
+          </StyledDiv>
+        </ImageListItem>
+      </ImageList>
 
       <Button onClick={handleImageUpload} variant="contained">
         Upload
@@ -387,4 +319,4 @@ function TempImagesUpload({
   );
 }
 
-export default TempImagesUpload;
+export default ImagesUpload;

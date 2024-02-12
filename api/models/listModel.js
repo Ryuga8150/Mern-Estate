@@ -30,6 +30,10 @@ const listSchema = new mongoose.Schema(
       },
       // required: true,
     },
+    dimensions: {
+      type: String,
+      required: [true, "A Listing must have dimensions"],
+    },
     bathrooms: {
       type: Number,
       required: [true, "A listing must specify the number of bathrooms"],
@@ -40,11 +44,11 @@ const listSchema = new mongoose.Schema(
     },
     furnished: {
       type: Boolean,
-      required: [true, "A listing must specify whether it's furnished or not"],
+      // required: [true, "A listing must specify whether it's furnished or not"],
     },
     parking: {
       type: Boolean,
-      required: [true, "A listing must specify whether it has parking or not"],
+      // required: [true, "A listing must specify whether it has parking or not"],
     },
     type: {
       type: String,
@@ -63,6 +67,26 @@ const listSchema = new mongoose.Schema(
     userRef: {
       type: String,
       required: [true, "A listing must belong to an existing user"],
+    },
+    benefits: {
+      airport: { type: Boolean, default: false },
+      bus: { type: Boolean, default: false },
+      metro: { type: Boolean, default: false },
+      hospital: { type: Boolean, default: false },
+      cityGarden: { type: Boolean, default: false },
+      shoppingCentres: { type: Boolean, default: false },
+    },
+    facilities: {
+      openFloorPlan: { type: Boolean, default: false },
+      water: { type: Boolean, default: false },
+      electricity: { type: Boolean, default: false },
+      parking: { type: Boolean, default: false },
+      kitchen: { type: Boolean, default: false },
+      externalLighting: { type: Boolean, default: false },
+    },
+    facing: {
+      type: String,
+      required: [true, "A listing must have a facing direction"],
     },
   },
   { timestamps: true }

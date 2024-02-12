@@ -40,6 +40,7 @@ import LocationMap from "../components/LocationMap";
 import FAQSection from "../components/FAQSection";
 import { useSelector } from "react-redux";
 import Contact from "../components/Contact";
+import { formatCurrency } from "../../utils/helpers";
 
 // #9EAAA9
 // #FAFAFA
@@ -237,16 +238,20 @@ function Listing() {
             <Box>
               <Typography
                 variant="subtitle1"
-                sx={{ fontSize: "1.4rem", fontWeight: 500 }}
+                sx={{
+                  fontSize: "1.4rem",
+                  fontWeight: 500,
+                  textTransform: "capitalize",
+                }}
               >
-                For Sale
+                {`For ${listing.type}`}
               </Typography>
               <Stack direction="row" spacing={2} alignItems="center">
                 <Typography
                   variant="h6"
                   sx={{ fontSize: { md: "3rem" }, fontWeight: 600 }}
                 >
-                  $ 12500
+                  {formatCurrency(12500)}
                 </Typography>
                 <Typography
                   variant="subtitle1"
@@ -256,7 +261,7 @@ function Listing() {
                     fontWeight: 600,
                   }}
                 >
-                  $13500
+                  {formatCurrency(13500)}
                 </Typography>
               </Stack>
 
@@ -290,43 +295,98 @@ function Listing() {
               }}
             >
               {[
-                { Icon: StraightenIcon, label: "Dimensions: 121 X 120" },
-                { Icon: LoyaltyIcon, label: "Type: Sale" },
-                { Icon: MyLocationIcon, label: "Facing: East" },
-                { Icon: LightIcon, label: "1200 V.P.A" },
-                { Icon: DoorSlidingIcon, label: "Built-in wardrobes" },
-                { Icon: ElectricBoltIcon, label: "1200 V.P.A" },
-                { Icon: WaterIcon, label: "24 Hours" },
-                { Icon: HouseIcon, label: "Secure Parking" },
-                { Icon: CountertopsIcon, label: "Modern Kitchen" },
-                { Icon: LightIcon, label: "External Lighting" },
-                { Icon: DirectionsBusIcon, label: "Within 5 Km" },
-                { Icon: AirplanemodeActiveIcon, label: "Within 10 Km" },
-                { Icon: ParkIcon, label: "Close To City Garden" },
-                { Icon: MapIcon, label: "Open Floor Plan" },
-              ].map(({ Icon, label }, ind) => (
-                <Box key={ind} sx={{ display: "flex", alignItems: "center" }}>
-                  <Icon
-                    sx={{
-                      mr: 2,
-                      // color: "#206ad3",
-                      color: "brandColor.main",
-                      width: "1.2em",
-                      height: "1.2em",
-                    }}
-                  />
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: "rgb(27, 27, 27,0.9)",
-                      fontSize: { md: "1.1rem", color: "#000000b8" },
-                      fontWeight: 500,
-                    }}
-                  >
-                    {label}
-                  </Typography>
-                </Box>
-              ))}
+                {
+                  Icon: StraightenIcon,
+                  label: `Dimensions: ${listing.dimensions
+                    .split("X")
+                    .join(" X ")}`,
+                  show: true,
+                },
+                {
+                  Icon: LoyaltyIcon,
+                  label: `Type: ${listing.type}`,
+                  show: true,
+                },
+                {
+                  Icon: MyLocationIcon,
+                  label: `Facing: ${listing.facing}`,
+                  show: true,
+                },
+                {
+                  Icon: ElectricBoltIcon,
+                  label: "1200 V.P.A",
+                  show: listing.facilities.electricity,
+                },
+                {
+                  Icon: DoorSlidingIcon,
+                  label: "Built-in wardrobes",
+                  show: true,
+                },
+                {
+                  Icon: WaterIcon,
+                  label: "24 Hours",
+                  show: listing.facilities.water,
+                },
+                {
+                  Icon: HouseIcon,
+                  label: "Secure Parking",
+                  show: listing.facilities.parking,
+                },
+                {
+                  Icon: CountertopsIcon,
+                  label: "Modern Kitchen",
+                  show: listing.facilities.kitchen,
+                },
+                {
+                  Icon: LightIcon,
+                  label: "External Lighting",
+                  show: listing.facilities.externalLighting,
+                },
+                {
+                  Icon: DirectionsBusIcon,
+                  label: "Within 5 Km",
+                  show: listing.benefits.bus,
+                },
+                {
+                  Icon: AirplanemodeActiveIcon,
+                  label: "Within 10 Km",
+                  show: listing.benefits.airport,
+                },
+                {
+                  Icon: ParkIcon,
+                  label: "Close To City Garden",
+                  show: listing.benefits.cityGarden,
+                },
+                {
+                  Icon: MapIcon,
+                  label: "Open Floor Plan",
+                  show: listing.facilities.openFloorPlan,
+                },
+              ]
+                .filter((obj) => obj.show === true)
+                .map(({ Icon, label }, ind) => (
+                  <Box key={ind} sx={{ display: "flex", alignItems: "center" }}>
+                    <Icon
+                      sx={{
+                        mr: 2,
+                        // color: "#206ad3",
+                        color: "brandColor.main",
+                        width: "1.2em",
+                        height: "1.2em",
+                      }}
+                    />
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "rgb(27, 27, 27,0.9)",
+                        fontSize: { md: "1.1rem", color: "#000000b8" },
+                        fontWeight: 500,
+                      }}
+                    >
+                      {label}
+                    </Typography>
+                  </Box>
+                ))}
             </Box>
           </Box>
           <Stack>
@@ -345,7 +405,7 @@ function Listing() {
               Location
             </Typography>
             <Paper sx={{ borderRadius: 5 }} elevation={5}>
-              <LocationMap />
+              {/* <LocationMap /> */}
             </Paper>
           </Stack>
         </StyledGrid>
