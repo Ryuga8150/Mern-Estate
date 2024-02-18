@@ -19,14 +19,16 @@ const listSchema = new mongoose.Schema(
       min: [1, "A listing price must be >= 1"],
       required: [true, "A listing must have a price"],
     },
-    discountPrice: {
+    discount: {
       type: Number,
-      min: [0, "A listing discount price must not be < 1"],
+      min: [0, "A listing discount must not be < 1"],
       validate: {
         validator: function (val) {
-          return val < this.regularPrice;
+          // return val < this.regularPrice;
+          return val < 100;
         },
-        message: "Discount Price must be less than Regular Price",
+        // message: "Discount Price must be less than Regular Price",
+        message: "Discount must be less than 100",
       },
       // required: true,
     },
@@ -53,8 +55,8 @@ const listSchema = new mongoose.Schema(
     type: {
       type: String,
       required: [true, "A listing must have a type"],
-      enum: ["rent", "sell"],
-      message: "Type is either rent or sell",
+      enum: ["rent", "sale"],
+      message: "Type is either rent or sale",
     },
     offer: {
       type: Boolean,

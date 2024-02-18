@@ -375,7 +375,7 @@ function ListingForm({
                       label="Rent"
                     />
                     <FormControlLabel
-                      value="sell"
+                      value="sale"
                       control={
                         <Radio
                           sx={{
@@ -447,7 +447,7 @@ function ListingForm({
 
             <Stack spacing={0.8}>
               <TertiaryHeading>Discount</TertiaryHeading>
-              <StyledOutlinedInput {...register("discountPrice")} />
+              <StyledOutlinedInput {...register("discount")} />
             </Stack>
           </Stack>
         </Box>

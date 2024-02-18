@@ -41,4 +41,36 @@
             labore ratione. Amet, quae dolores.
           </Typography>
         </Stack> */
+  // <Stack
+  //     direction="row"
+  //     spacing={2}
+  //     sx={{ display: "flex", alignItems: "center", mb: 2 }}
+  //   >
+  //     <Typography variant="body1">Search Term:</Typography>
+  //     <StyledTextField
+  //       id="outlined-basic"
+  //       // label="Search"
+  //       // variant="outlined"
+  //       {...register("searchTerm")}
+  //       // InputLabelProps={{ shrink: true }}
+  //     />
+  //   </Stack>
+  //   <FormControlLabel
+  //     control={
+  //       <Select
+  //         inputProps={{ "aria-label": "Without label" }}
+  //         value={age}
+  //         // onChange={(e) => field.onChange(e.target.value)}
+  //         // {...register("sort")}
+  //         onChange={(e) => setAge(e.target.value)}
+  //       >
+  //         <MenuItem value="createdAt_desc">Latest</MenuItem>
+  //         <MenuItem value="createdAt_asc">Oldest</MenuItem>
+  //         <MenuItem value="regularPrice_asc">Price low to high</MenuItem>
+  //         <MenuItem value="regularPrice_desc">Price high to low</MenuItem>
+  //       </Select>
+  //     }
+  //     label="Sort By"
+  //     labelPlacement="start"
+  //   />
 }

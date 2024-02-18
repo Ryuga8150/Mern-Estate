@@ -13,9 +13,8 @@ function ProductReel({ label, url = "" }) {
     function () {
       const fetchListings = async () => {
         try {
-          const res = await fetch(
-            `/api/listing/get?searchTerm=property&limit=3${url}`
-          );
+          // `/api/listing/get?searchTerm=property&limit=3${url}`
+          const res = await fetch(`/api/listing/get?limit=3${url}`);
           const data = await res.json();
           console.log(data);
           setListings(data.data.listings);

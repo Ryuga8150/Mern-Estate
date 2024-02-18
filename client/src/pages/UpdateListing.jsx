@@ -73,7 +73,7 @@ function UpdateListing() {
 
       if (apiData.imageUrls.length === 0) return;
 
-      if (apiData.offer && apiData.discountPrice === 0) return;
+      if (apiData.offer && apiData.discount === 0) return;
 
       // console.log("Sending...");
       const res = await fetch(`/api/listing/update/${listingID}`, {

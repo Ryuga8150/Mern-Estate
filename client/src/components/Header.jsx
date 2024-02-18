@@ -23,7 +23,7 @@ Header.propTypes = {
   isHome: PropTypes.bool,
 };
 function Header({ isHome = false }) {
-  console.log(isHome);
+  // console.log(isHome);
   const data = useSelector((store) => store.user);
 
   // return {};
@@ -45,7 +45,7 @@ function Header({ isHome = false }) {
   });
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log(getValues("searchTerm"));
+  // console.log(getValues("searchTerm"));
   watch("searchTerm");
   const onSubmit = async function ({ searchTerm }) {
     // console.log(searchTerm);

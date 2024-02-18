@@ -19,6 +19,7 @@ import CreateListing from "./pages/CreateListing";
 import UpdateListing from "./pages/UpdateListing";
 import Listing from "./pages/Listing";
 import Search from "./pages/Search/";
+import TempSearch from "./pages/TempSearch";
 
 // FF9900
 function App() {
@@ -54,7 +55,8 @@ function App() {
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/listing/:listingID" element={<Listing />} />
-            <Route path="/search" element={<Search />} />
+            {/* <Route path="/search" element={<Search />} /> */}
+            <Route path="/search" element={<TempSearch />} />
             <Route element={<ProtectedRoute />}>
               <Route path="profile" element={<Profile />} />
               <Route path="create-listing" element={<CreateListing />} />

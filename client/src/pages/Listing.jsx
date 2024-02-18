@@ -247,7 +247,39 @@ function Listing() {
                 {`For ${listing.type}`}
               </Typography>
               <Stack direction="row" spacing={2} alignItems="center">
+                {listing.discount && listing.discount > 0 ? (
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontSize: { md: "3rem" },
+
+                      fontWeight: 600,
+                    }}
+                  >
+                    {formatCurrency(
+                      listing.regularPrice -
+                        (listing.regularPrice * listing.discount) / 100
+                    )}
+                  </Typography>
+                ) : null}
+
                 <Typography
+                  variant="h6"
+                  sx={{
+                    ...(listing.discount
+                      ? {
+                          fontSize: { md: "1.6rem" },
+                          textDecoration: "line-through",
+                        }
+                      : {
+                          fontSize: { md: "3rem" },
+                        }),
+                    fontWeight: 600,
+                  }}
+                >
+                  {formatCurrency(listing.regularPrice)}
+                </Typography>
+                {/* <Typography
                   variant="h6"
                   sx={{ fontSize: { md: "3rem" }, fontWeight: 600 }}
                 >
@@ -262,7 +294,7 @@ function Listing() {
                   }}
                 >
                   {formatCurrency(13500)}
-                </Typography>
+                </Typography> */}
               </Stack>
 
               <Contact listing={listing} />

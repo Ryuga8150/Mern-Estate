@@ -12,6 +12,7 @@ import BathtubOutlinedIcon from "@mui/icons-material/BathtubOutlined";
 import StraightenIcon from "@mui/icons-material/Straighten";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { formatCurrency } from "../../utils/helpers";
 const ImageContainer = styled("div")({
   width: "100%",
   // overflow: "hidden",
@@ -28,8 +29,14 @@ Card.propTypes = {
   listing: PropTypes.object,
   descriptionLength: PropTypes.number,
   elevation: PropTypes.number,
+  hover: PropTypes.bool,
 };
-function Card({ listing, descriptionLength = 140, elevation = 3 }) {
+function Card({
+  listing,
+  descriptionLength = 140,
+  elevation = 3,
+  hover = true,
+}) {
   const [favorite, setFavorite] = useState(false);
 
   return (
@@ -39,10 +46,12 @@ function Card({ listing, descriptionLength = 140, elevation = 3 }) {
           padding: "1.2rem",
           borderRadius: 4,
           width: "340px",
-          "&:hover": {
-            transform: "scale(1.1)",
-            transition: "transform ease-out 0.5s",
-          },
+          ...(hover && {
+            "&:hover": {
+              transform: "scale(1.1)",
+              transition: "transform ease-out 0.5s",
+            },
+          }),
         }}
         elevation={elevation}
       >
@@ -57,21 +66,38 @@ function Card({ listing, descriptionLength = 140, elevation = 3 }) {
               justifyContent="space-between"
             >
               <Stack direction="row" spacing={1.4} alignItems="center">
+                {listing.discount && listing.discount > 0 ? (
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontSize: { md: "1.6rem" },
+
+                      fontWeight: 600,
+                    }}
+                  >
+                    {formatCurrency(
+                      listing.regularPrice -
+                        (listing.regularPrice * listing.discount) / 100
+                    )}
+                  </Typography>
+                ) : null}
+
                 <Typography
                   variant="h6"
-                  sx={{ fontSize: { md: "1.6rem" }, fontWeight: 600 }}
-                >
-                  {`$ ${listing.regularPrice}`}
-                </Typography>
-                <Typography
-                  variant="subtitle1"
                   sx={{
-                    fontSize: { md: "1rem" },
-                    textDecoration: "line-through",
+                    ...(listing.discount
+                      ? {
+                          fontSize: { md: "1rem" },
+                          textDecoration: "line-through",
+                        }
+                      : {
+                          fontSize: { md: "1.6rem" },
+                        }),
+
                     fontWeight: 600,
                   }}
                 >
-                  {`$ ${listing.discountPrice}`}
+                  {formatCurrency(listing.regularPrice)}
                 </Typography>
               </Stack>
 

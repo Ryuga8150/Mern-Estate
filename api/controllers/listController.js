@@ -64,53 +64,111 @@ exports.getListing = catchAsync(async (req, res, next) => {
   });
 });
 
+const getObjectFromArray = function (benefits, word) {
+  let obj = {};
+
+  benefits.map((field) => {
+    obj[word + "." + field] = true;
+  });
+
+  return obj;
+};
 exports.getListings = catchAsync(async (req, res, next) => {
   const limit = req.query.limit * 1 || 9;
   const startIndex = req.query.startIndex * 1 || 0;
-  console.log(req.query);
-  // console.log(JSON.parse(req.query));
-  // console.log(offer);
-  let { offer, furnished, parking, type } = req.query;
-  if (offer === undefined || offer === "false") {
-    offer = { $in: [false, true] };
-  }
-
-  if (furnished === undefined || furnished === "false") {
-    furnished = { $in: [false, true] };
-  }
-
-  if (parking === undefined || parking === "false") {
-    parking = { $in: [false, true] };
-  }
-
-  if (type === undefined || type === "all") {
-    type = { $in: ["sell", "rent"] };
-  }
-
   const searchTerm = req.query.searchTerm || "";
   const sortBy = req.query.sortBy || "createdAt";
-  const order = req.query.order || "desc";
+  const sortOrder = req.query.order || "desc";
+  const price = req.query.price || "[0,100000000]";
+  const [min, max] = JSON.parse(price);
+  const typeChoices = (req.query.type || "rentAndsale").split("And");
 
-  // const queryObj = {
-  //   searchTerm,
-  //   offer,
-  //   furnished,
-  //   parking,
-  //   type,
-  // };
-  // console.log("Query Object", queryObj);
+  const benefits = req.query.benefits || "[]";
+  // console.log(JSON.parse(benefits));
+  const benefitsObj = getObjectFromArray(JSON.parse(benefits), "benefits");
+  console.log(benefitsObj);
 
-  const listings = await Listing.find({
-    name: { $regex: searchTerm, $options: "i" },
-    offer,
-    furnished,
-    parking,
-    type,
-  })
-    .sort({ [sortBy]: order })
-    .limit(limit)
-    .skip(startIndex);
+  const facilities = req.query.facilities || "[]";
+  const facilitiesObj = getObjectFromArray(
+    JSON.parse(facilities),
+    "facilities"
+  );
 
+  const discount = req.query.discount || "[]";
+  const discountArr = JSON.parse(discount);
+
+  let minmDiscount = 100;
+  let maxmDiscount = 100;
+  discountArr.forEach((str) => {
+    const [symbol, val] = str.split("ThanOrEqualTo");
+    if (symbol === "less") maxmDiscount = 10;
+    else minmDiscount = val * 1 < minmDiscount ? val * 1 : minmDiscount;
+    // console.log();
+  });
+
+  if (minmDiscount === 100) minmDiscount = 0;
+  console.log(JSON.parse(discount));
+  console.log(minmDiscount);
+
+  console.log(req.query);
+
+  // const listings = await Listing.find({
+  //   name: { $regex: searchTerm, $options: "i" },
+  //   type: {
+  //     $in: typeChoices,
+  //   },
+  //   regularPrice: {
+  //     $lte: max,
+  //     $gte: min,
+  //   },
+  //   ...benefitsObj,
+  //   ...facilitiesObj,
+  // })
+  //   .limit(limit)
+  //   .sort({ [sortBy]: sortOrder })
+  //   .skip(startIndex);
+
+  const listings = await Listing.aggregate([
+    {
+      $match: {
+        name: { $regex: searchTerm, $options: "i" },
+        type: {
+          $in: typeChoices,
+        },
+        regularPrice: {
+          $lte: max,
+          $gte: min,
+        },
+        ...benefitsObj,
+        ...facilitiesObj,
+        discount: {
+          $lte: maxmDiscount,
+          $gte: minmDiscount,
+        },
+      },
+    },
+    {
+      $addFields: {
+        price: {
+          $subtract: [
+            "$regularPrice",
+            {
+              $divide: [{ $multiply: ["$regularPrice", "$discount"] }, 100],
+            },
+          ],
+        },
+      },
+    },
+    {
+      $limit: limit,
+    },
+    {
+      $sort: { [sortBy]: sortOrder === "desc" ? -1 : 1 },
+    },
+    {
+      $skip: startIndex,
+    },
+  ]);
   // if (!listings) return next(new AppError("No Listings Found"));
   res.status(200).json({
     status: "success",

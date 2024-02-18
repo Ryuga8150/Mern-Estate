@@ -76,7 +76,7 @@ function CreateListing() {
         facilities: filterOptions(formData.facilities),
         address: `${formData.address}, ${formData.city}, ${formData.state}`,
         regularPrice: +formData.regularPrice,
-        discountPrice: +formData.discountPrice,
+        discount: +formData.discount,
         city: undefined,
         state: undefined,
         userRef: user._id,
@@ -99,7 +99,8 @@ function CreateListing() {
       // if (newFormData.imageUrls.length === 0) return;
       // if (newFormData.offer && newFormData.discountPrice === 0) return;
       if (apiData.imageUrls.length === 0) return;
-      if (apiData.offer && apiData.discountPrice === 0) return;
+      // if (apiData.offer && apiData.discountPrice === 0) return;
+      if (apiData.offer && apiData.discount === 0) return;
 
       console.log("Sending...");
       const res = await fetch("/api/listing/create", {
