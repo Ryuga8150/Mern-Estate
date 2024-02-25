@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   createTheme,
   responsiveFontSizes,
@@ -10,16 +9,29 @@ import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Box from "@mui/material/Box";
 import About from "./pages/About";
 // import { LinkProps } from "@mui/material/Link";
+
+// import AppLayout from "./components/AppLayout";
+// import Profile from "./pages/Profile";
+// import ProtectedRoute from "./components/ProtectedRoute";
+// import CreateListing from "./pages/CreateListing";
+// import UpdateListing from "./pages/UpdateListing";
+// import Listing from "./pages/Listing";
+// import Search from "./pages/Search/";
+
+// import TempSearch from "./pages/Search";
+
 import AppLayout from "./components/AppLayout";
-import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
-import CreateListing from "./pages/CreateListing";
-import UpdateListing from "./pages/UpdateListing";
-import Listing from "./pages/Listing";
-import Search from "./pages/Search/";
-import TempSearch from "./pages/TempSearch";
+import { Suspense, lazy } from "react";
+
+const Profile = lazy(() => import("./pages/Profile"));
+const CreateListing = lazy(() => import("./pages/CreateListing"));
+const UpdateListing = lazy(() => import("./pages/UpdateListing"));
+const Listing = lazy(() => import("./pages/Listing"));
+const Search = lazy(() => import("./pages/Search"));
 
 // FF9900
 function App() {
@@ -39,34 +51,55 @@ function App() {
       },
     },
   });
-  const queryClient = new QueryClient();
+  // const queryClient = new QueryClient();
   theme = responsiveFontSizes(theme);
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}></QueryClientProvider>
+        {/* <QueryClientProvider client={queryClient}></QueryClientProvider> */}
         {/* <RouterProvider router={router} /> */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route element={<AppLayout />}>
-            {/* <Route index element={<Navigate replace to="home" />} /> */}
-            {/* <Route path="home" element={<Home />} /> */}
-            <Route path="/about" element={<About />} />
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/listing/:listingID" element={<Listing />} />
-            {/* <Route path="/search" element={<Search />} /> */}
-            <Route path="/search" element={<TempSearch />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="profile" element={<Profile />} />
-              <Route path="create-listing" element={<CreateListing />} />
-              <Route
-                path="update-listing/:listingID"
-                element={<UpdateListing />}
-              />
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                height: "100vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div className="spinnerContainer">
+                <div className="spinner" />
+              </div>
+            </Box>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route element={<AppLayout />}>
+              {/* <Route index element={<Navigate replace to="home" />} /> */}
+              {/* <Route path="home" element={<Home />} /> */}
+              <Route path="/about" element={<About />} />
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/listing/:listingID" element={<Listing />} />
+              {/* <Route
+              path="/skeleton-listing/:listingID"
+              element={<SkeletonListing />}
+            /> */}
+              <Route path="/search" element={<Search />} />
+              {/* <Route path="/search" element={<TempSearch />} /> */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="profile" element={<Profile />} />
+                <Route path="create-listing" element={<CreateListing />} />
+                <Route
+                  path="update-listing/:listingID"
+                  element={<UpdateListing />}
+                />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </Suspense>
         <Toaster
           position="top-center"
           reverseOrder={false}

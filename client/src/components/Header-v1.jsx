@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 
 function Header() {
   const { user } = useSelector((store) => store.user.currentUser.data);
-  console.log(user);
+  // console.log(user);
   return (
     <Stack
       direction="row"

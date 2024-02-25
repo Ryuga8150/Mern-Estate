@@ -32,7 +32,7 @@ function HeroSection() {
           textAlign="center"
         >
           Dive into a world of comfort and convenience as we connect you with
-          the finest hotels,ensuring a perfect gateway tailored to your
+          the finest properties,ensuring a perfect gateway tailored to your
           preferences
         </Typography>
         <Link to="/about">Learn More &rarr;</Link>
@@ -80,8 +80,8 @@ function HeroSection() {
       >
         {[
           { label: "17K+", description: "Premium Product" },
-          { label: "17K+", description: "Premium Product" },
-          { label: "17K+", description: "Premium Product" },
+          { label: "12K+", description: "Happy Customers" },
+          { label: "50+", description: "Award Winning" },
         ].map(({ label, description }, ind) => (
           <Stack key={ind} spacing={0.2}>
             <Typography

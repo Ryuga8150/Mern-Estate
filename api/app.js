@@ -20,6 +20,12 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listRouter);
 
+app.use(express.static(path.join(__dirname, "/client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
+
 app.all("*", (req, res, next) => {
   const err = new Error(`Can't find ${req.originalUrl} on this server`);
   err.status = "fail";

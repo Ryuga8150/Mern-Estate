@@ -1,19 +1,20 @@
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Link from "@mui/material/Link";
+import OutlinedInput from "@mui/material/OutlinedInput";
+
 import styled from "@emotion/styled";
-import {
-  Button,
-  Container,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-  Link,
-} from "@mui/material";
 
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -65,7 +66,7 @@ function SignIn() {
     reset,
     formState: { isSubmitting },
   } = useForm();
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.user);
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ function SignIn() {
   // console.log(isSubmitting);
   const onSubmit = async function (formData) {
     try {
-      console.log(formData);
+      // console.log(formData);
       dispatch(signInStart());
       reset();
       //return;
@@ -96,16 +97,16 @@ function SignIn() {
       });
 
       const resData = await res.json();
-      console.log("From Server");
-      console.log(resData);
+      // console.log("From Server");
+      // console.log(resData);
 
       if (resData.status === "success") {
-        console.log("In success");
+        // console.log("In success");
         toast.success("Signed In SuccessFully");
         dispatch(signInSuccess(resData));
         navigate("/");
       } else if (resData.status === "fail") {
-        console.log("In fail");
+        // console.log("In fail");
         toast.error(resData.message);
         dispatch(signInFailure(resData.message));
       } else {
@@ -126,7 +127,7 @@ function SignIn() {
     <StyledContainer maxWidth="sm">
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <Stack spacing={2}>
-          <Heading>Sign In</Heading>
+          <Heading sx={{ marginBottom: "8px !important" }}>Sign In</Heading>
           <TextField
             id="outlined-basic"
             variant="outlined"
@@ -146,13 +147,11 @@ function SignIn() {
             {...register("email")}
             disabled={isSubmitting}
           />
-          <TextField
-            // id="outlined-basic"
+          <OutlinedInput
             id="outlined-adornment-password"
-            variant="outlined"
-            placeholder="Password"
+            type={showPassword ? "text" : "password"}
             sx={{
-              "& .MuiInputBase-root:hover, & .MuiInputBase-root.Mui-focused": {
+              "&:hover, &.Mui-focused": {
                 "& .MuiOutlinedInput-notchedOutline": {
                   border: "solid 2px",
                   borderColor: "brandColor.main",
@@ -162,10 +161,8 @@ function SignIn() {
                 border: "solid 2px",
                 borderColor: "brandColor.light2",
               },
-              marginBottom: 22,
+              marginBottom: "16px !important",
             }}
-            {...register("password")}
-            type={showPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -174,10 +171,18 @@ function SignIn() {
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showPassword ? (
+                    <VisibilityOff sx={{ color: "brandColor.main" }} />
+                  ) : (
+                    <Visibility sx={{ color: "brandColor.main" }} />
+                  )}
                 </IconButton>
               </InputAdornment>
             }
+            // label="Password"
+            placeholder="Password"
+            {...register("password")}
+            disabled={isSubmitting}
           />
 
           <StyledButton

@@ -1,8 +1,7 @@
+import Container from "@mui/material/Container";
+import styled from "@emotion/styled";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import { Container } from "@mui/material";
-import styled from "@emotion/styled";
-import { grey } from "@mui/material/colors";
 
 // colors
 // 60 -#fff

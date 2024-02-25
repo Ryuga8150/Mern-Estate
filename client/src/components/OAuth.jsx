@@ -1,7 +1,7 @@
+import Button from "@mui/material/Button";
+
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "@firebase/auth";
-import { red } from "@mui/material/colors";
 import styled from "@emotion/styled";
-import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -21,11 +21,11 @@ function OAuth() {
   const handleGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      console.log(app);
+      // console.log(app);
       const auth = getAuth(app);
 
       const result = await signInWithPopup(auth, provider);
-      console.log(result);
+      // console.log(result);
       // popup will come if you have at least 1 gmail account
 
       const res = await fetch("/api/auth/google", {
@@ -40,7 +40,7 @@ function OAuth() {
         }),
       });
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (err) {

@@ -40,21 +40,21 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res) => {
-  console.log("In Signup");
+  // console.log("In Signup");
   const newUser = await User.create(req.body);
   // const newUser = "no";
   createSendToken(newUser, 200, res);
 });
 
 exports.signin = catchAsync(async (req, res, next) => {
-  console.log("In signin");
+  // console.log("In signin");
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
 
   if (!user) return next(new AppError("No User exists with that Email", 404));
 
-  console.log(user);
+  // console.log(user);
   if (!(await user.correctPassword(password, user.password)))
     return next(new AppError("Invalid Credentials", 401));
 
@@ -62,7 +62,6 @@ exports.signin = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = (req, res) => {
-  
   res.cookie("jwt", "loggedout", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
@@ -80,7 +79,7 @@ exports.google = catchAsync(async (req, res, next) => {
 
   const user = await User.findOne({ email });
   if (user) {
-    console.log("User exists");
+    // console.log("User exists");
     createSendToken(user, 200, res);
   } else {
     // we have set password as required in model
@@ -88,7 +87,7 @@ exports.google = catchAsync(async (req, res, next) => {
     // which later can be changed by the user if he wants
 
     // 36 means numbers from 0 to 9 and from 'A' to 'Z' characters
-    console.log("Creating User");
+    // console.log("Creating User");
     const generatedPassword = generatePassword(8) + generatePassword(8);
     // -8 for last 8 digits. 16 character password which is very secure
 
@@ -102,3 +101,12 @@ exports.google = catchAsync(async (req, res, next) => {
     createSendToken(newUser, 200, res);
   }
 });
+
+exports.isLoggedIn = (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    data: {
+      loggedIn: true,
+    },
+  });
+};

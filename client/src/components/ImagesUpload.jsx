@@ -1,16 +1,13 @@
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import ImageListItem from "@mui/material/ImageListItem";
+import ImageListItemBar from "@mui/material/ImageListItemBar";
+
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
-import {
-  Box,
-  Button,
-  Hidden,
-  IconButton,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  Stack,
-  Typography,
-} from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { app } from "../firebase";
 import {
@@ -21,7 +18,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { toast } from "react-hot-toast";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+// import StarBorderIcon from "@mui/icons-material/StarBorder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 function srcset(image, size, rows = 1, cols = 1) {
@@ -33,28 +30,28 @@ function srcset(image, size, rows = 1, cols = 1) {
   };
 }
 
-const tempItemData = [
-  {
-    img: "images/house-1.jpg",
-    title: "Breakfast",
-    rows: 3,
-    cols: 3,
-  },
-  {
-    img: "images/house-2.jpg",
-    title: "Burger",
-    rows: 1.5,
-    cols: 1,
-    // rows: 3,
-    // cols: 3,
-  },
-  {
-    img: "images/house-3.jpg",
-    title: "Camera",
-    rows: 1.5,
-    cols: 1,
-  },
-];
+// const tempItemData = [
+//   {
+//     img: "images/house-1.jpg",
+//     title: "Breakfast",
+//     rows: 3,
+//     cols: 3,
+//   },
+//   {
+//     img: "images/house-2.jpg",
+//     title: "Burger",
+//     rows: 1.5,
+//     cols: 1,
+//     // rows: 3,
+//     // cols: 3,
+//   },
+//   {
+//     img: "images/house-3.jpg",
+//     title: "Camera",
+//     rows: 1.5,
+//     cols: 1,
+//   },
+// ];
 
 const StyledDiv = styled("div")({
   padding: 8,
@@ -97,10 +94,9 @@ function ImagesUpload({
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-          console.log(`Upload is ${progress}% done`);
+          // const progress =
+          // (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          // console.log(`Upload is ${progress}% done`);
         },
         (error) => {
           reject(error);
@@ -139,7 +135,7 @@ function ImagesUpload({
         //   ...formData,
         //   imageUrls: formData.imageUrls.concat(urls),
         // });
-        console.log(getValues("imageUrls"));
+        // console.log(getValues("imageUrls"));
         setValue("imageUrls", getValues("imageUrls").concat(urls));
         setImageUploadError(null);
       })
@@ -151,7 +147,7 @@ function ImagesUpload({
 
   const handleImageDelete = async function (imgUrlDelete) {
     try {
-      console.log(imgUrlDelete);
+      // console.log(imgUrlDelete);
 
       const storage = getStorage();
 
@@ -160,7 +156,7 @@ function ImagesUpload({
 
       // Delete the file
       await deleteObject(desertRef);
-      console.log("File deleted successfully");
+      // console.log("File deleted successfully");
       // const newImageUrls = formData.imageUrls.filter(
       //   (imgUrl) => imgUrl !== imgUrlDelete
       // );
@@ -213,7 +209,7 @@ function ImagesUpload({
       cols,
     };
   });
-  console.log(itemData);
+  // console.log(itemData);
 
   return (
     <Box

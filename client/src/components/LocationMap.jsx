@@ -1,6 +1,7 @@
+import Box from "@mui/material/Box";
+
 import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import { Box } from "@mui/material";
 
 // mapboxgl.accessToken = import.meta.env.MAPBOX_TOKEN;
 
@@ -39,7 +40,7 @@ export default function LocationMap() {
 
     // coming from our css
     el.className = "marker";
-    console.log(el);
+    // console.log(el);
 
     // Add marker
     new mapboxgl.Marker({

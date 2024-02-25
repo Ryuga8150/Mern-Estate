@@ -3,7 +3,7 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
 exports.createListing = catchAsync(async (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
   const listing = await Listing.create(req.body);
 
   res.status(201).json({
@@ -52,9 +52,17 @@ exports.updateListing = catchAsync(async (req, res, next) => {
 });
 
 exports.getListing = catchAsync(async (req, res, next) => {
+  // console.log("In get Listing");
+  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    // console.log("Not Matched");
+    return next(new AppError("No listing exists with that id"));
+  }
   const listing = await Listing.findById(req.params.id);
-
-  if (!listing) return next(new AppError("No listing exists with that id"));
+  // console.log(listing);
+  if (!listing) {
+    // console.log("Hit");
+    return next(new AppError("No listing exists with that id"));
+  }
 
   res.status(200).json({
     status: "success",
@@ -86,7 +94,7 @@ exports.getListings = catchAsync(async (req, res, next) => {
   const benefits = req.query.benefits || "[]";
   // console.log(JSON.parse(benefits));
   const benefitsObj = getObjectFromArray(JSON.parse(benefits), "benefits");
-  console.log(benefitsObj);
+  // console.log(benefitsObj);
 
   const facilities = req.query.facilities || "[]";
   const facilitiesObj = getObjectFromArray(
@@ -97,20 +105,26 @@ exports.getListings = catchAsync(async (req, res, next) => {
   const discount = req.query.discount || "[]";
   const discountArr = JSON.parse(discount);
 
-  let minmDiscount = 100;
-  let maxmDiscount = 100;
+  // Query Structure for filtering discounts
+  // $or: [
+  //   {
+  //     discount: {
+  //       $lte: 8,
+  //       $gte: 5,
+  //     },
+  //   },
+  // ]
+  const discountObj = { $or: [] };
   discountArr.forEach((str) => {
     const [symbol, val] = str.split("ThanOrEqualTo");
-    if (symbol === "less") maxmDiscount = 10;
-    else minmDiscount = val * 1 < minmDiscount ? val * 1 : minmDiscount;
+    if (symbol === "less")
+      discountObj.$or.push({ discount: { $lte: val * 1, $gte: 0 } });
+    else discountObj.$or.push({ discount: { $lte: 100, $gte: val * 1 } });
     // console.log();
   });
+  // console.log(discountObj.$or);
 
-  if (minmDiscount === 100) minmDiscount = 0;
-  console.log(JSON.parse(discount));
-  console.log(minmDiscount);
-
-  console.log(req.query);
+  // console.log(req.query);
 
   // const listings = await Listing.find({
   //   name: { $regex: searchTerm, $options: "i" },
@@ -141,10 +155,8 @@ exports.getListings = catchAsync(async (req, res, next) => {
         },
         ...benefitsObj,
         ...facilitiesObj,
-        discount: {
-          $lte: maxmDiscount,
-          $gte: minmDiscount,
-        },
+
+        ...(discountObj.$or.length > 0 && discountObj),
       },
     },
     {

@@ -1,5 +1,7 @@
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+
 import PropTypes from "prop-types";
-import { Box, IconButton, ImageListItem, Paper } from "@mui/material";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -80,15 +82,17 @@ function ImageSlider({ imgArr }) {
     >
       <CustomSwiper
         slidesPerView={1}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
+        // onSlideChange={() => console.log("slide change")}
+        // onSwiper={(swiper) => console.log(swiper)}
       >
         {imgArr.map((image, ind) => {
           return (
             <CustomSwiperSlide key={ind}>
-              <SliderButton icon={ChevronLeftIcon} />
+              {ind !== 0 && <SliderButton icon={ChevronLeftIcon} />}
               <Image src={image} alt="burger" loading="lazy" />
-              <SliderButton next={true} icon={ChevronRightIcon} />
+              {ind !== imgArr.length - 1 && (
+                <SliderButton next={true} icon={ChevronRightIcon} />
+              )}
             </CustomSwiperSlide>
           );
         })}

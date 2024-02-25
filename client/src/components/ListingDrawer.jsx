@@ -1,33 +1,25 @@
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemText from "@mui/material/ListItemText";
+import Skeleton from "@mui/material/Skeleton";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+
 import * as React from "react";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+// import InboxIcon from "@mui/icons-material/MoveToInbox";
+// import MailIcon from "@mui/icons-material/Mail";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FolderIcon from "@mui/icons-material/Folder";
+// import FolderIcon from "@mui/icons-material/Folder";
 import EditIcon from "@mui/icons-material/Edit";
 import { app } from "../firebase";
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import {
-  Avatar,
-  Box,
-  Divider,
-  Grid,
-  IconButton,
-  Link,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  SwipeableDrawer,
-  Typography,
-} from "@mui/material";
+import { deleteObject, getStorage, ref } from "firebase/storage";
 
 import { useState } from "react";
 import styled from "@emotion/styled";
@@ -35,6 +27,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import SkeletonShowListingCard from "./SkeletonShowListingCard";
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -43,6 +36,8 @@ const Demo = styled("div")(({ theme }) => ({
 export default function ListingDrawer() {
   const [state, setState] = useState(false);
   const [listings, setListings] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const { currentUser } = useSelector((store) => store.user);
   const { user } = currentUser ? currentUser.data : {};
   // console.log(listings);
@@ -51,7 +46,9 @@ export default function ListingDrawer() {
 
   const handleDeleteListing = async function (deleteListingID) {
     try {
-      console.log(deleteListingID);
+      setError(false);
+      setLoading(true);
+      // console.log(deleteListingID);
       const deletelistingData = listings.filter(
         (listing) => listing._id === deleteListingID
       )[0];
@@ -73,10 +70,10 @@ export default function ListingDrawer() {
         const promise = deleteObject(imgRef);
         listingImagePromises.push(promise);
       });
-      console.log(listingImagePromises);
+      // console.log(listingImagePromises);
       await Promise.all(listingImagePromises);
       // navigate(`/update-listing/${editListingID}`);
-      console.log("Images Deleted Successfully");
+      // console.log("Images Deleted Successfully");
 
       await fetch(`/api/listing/delete/${deleteListingID}`, {
         method: "DELETE",
@@ -88,36 +85,48 @@ export default function ListingDrawer() {
       // console.log("After");
       // console.log(listings);
       // setState(false);
+      setLoading(false);
       toast.success("Listing Deleted Successfully");
     } catch (err) {
       console.log(err);
+      toast.error(err.message);
+      setLoading(false);
     }
   };
 
   const handleEditListing = function (editListingID) {
-    console.log(editListingID);
+    // console.log(editListingID);
     navigate(`/update-listing/${editListingID}`);
   };
 
   useEffect(
     function () {
       if (!state) return;
+
       const handleListings = async function () {
         try {
           if (!user._id) {
             console.log("You are not logged in ");
-            return;
+            setError(true);
+            throw new Error("You are not logged in");
           }
+          setError(false);
+          setLoading(true);
           const res = await fetch(`/api/user/listings/${user._id}`);
           const data = await res.json();
 
           if (data.status !== "success") {
-            return;
+            setError(true);
+            throw new Error(data.message);
           }
-          console.log(data);
+          // console.log(data);
           setListings(data.data.listings);
+          setLoading(false);
         } catch (err) {
           console.log(err);
+          toast.error(err.message);
+          setLoading(false);
+          // setError(false);
         }
       };
 
@@ -139,14 +148,29 @@ export default function ListingDrawer() {
 
   const list2 = () => (
     <Grid item xs={12} md={6} sx={{ width: 350 }}>
-      <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-        Avatar with text and icon
+      <Typography
+        sx={{
+          mt: 4,
+          mb: 1,
+          ml: 2,
+          mr: 2,
+          fontSize: { md: "2rem" },
+          fontWeight: 600,
+          fontFamily: "sans-neue-heavy,sans-serif",
+        }}
+        variant="h6"
+        component="div"
+      >
+        Listings
       </Typography>
       <Demo>
         <List
 
         // dense={dense}
         >
+          {listings && listings.length === 0 && (
+            <Box sx={{ pl: 2, pr: 2 }}>No Listings Present</Box>
+          )}
           {listings &&
             listings.length > 0 &&
             listings.map((listing) => (
@@ -215,12 +239,13 @@ export default function ListingDrawer() {
   );
 
   return (
-    <div>
+    <Box sx={{ display: "flex", alignItems: "center" }}>
       <Link
         color="secondary.main"
         variant="h6"
         underline="hover"
-        sx={{ cursor: "pointer" }}
+        // #155d27
+        sx={{ cursor: "pointer", mr: "45px", color: "#2c6d3d" }}
         onClick={() => {
           toggleDrawer();
           // handleListings();
@@ -234,12 +259,48 @@ export default function ListingDrawer() {
         onClose={toggleDrawer}
         onOpen={toggleDrawer}
       >
-        {listings === null || listings === undefined ? (
-          <span>Deleting</span>
-        ) : (
-          list2()
+        {error && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              width: 200,
+              height: "100%",
+              pl: 2,
+              pr: 2,
+              pt: 12,
+            }}
+          >
+            <span>Error While Fetching Listings...</span>
+          </Box>
         )}
+        {!error ? (
+          loading || listings === null || listings === undefined ? (
+            <>
+              <Skeleton
+                variant="text"
+                width={185}
+                sx={{
+                  mt: 4,
+                  mb: 2.5,
+                  ml: 2,
+                  mr: 2,
+                  fontSize: { md: "2rem" },
+                  fontWeight: 600,
+                }}
+              />
+              {Array.from(Array(3).keys()).map((val) => (
+                <>
+                  <SkeletonShowListingCard key={val} />
+                  <Divider />
+                </>
+              ))}
+            </>
+          ) : (
+            list2()
+          )
+        ) : null}
       </SwipeableDrawer>
-    </div>
+    </Box>
   );
 }

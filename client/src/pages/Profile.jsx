@@ -1,18 +1,18 @@
-import styled from "@emotion/styled";
-import {
-  Avatar,
-  Button,
-  Container,
-  Link,
-  Stack,
-  TextField,
-  Typography,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
+import styled from "@emotion/styled";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -65,7 +65,6 @@ const StyledButton = styled(Button)({
 //   }
 // }
 function Profile() {
-  console.log("Profile Rendered");
   const { currentUser, loading, error } = useSelector((store) => {
     // console.log(store);
     return store.user;
@@ -78,11 +77,8 @@ function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  // console.log(document.cookie);
+  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // console.log(file);
@@ -125,12 +121,12 @@ function Profile() {
 
   const handleLogout = async function () {
     try {
-      console.log("In logout");
+      // console.log("In logout");
       dispatch(signOutStart());
 
       const res = await fetch(`/api/auth/signout`);
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       if (data.status !== "success") {
         dispatch(signOutFailure(data.message));
         return;
@@ -148,7 +144,7 @@ function Profile() {
 
       const res = await fetch(`/api/auth/signout`);
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       if (data.status !== "success") {
         dispatch(deleteUserFailure(data.message));
         return;
@@ -160,8 +156,19 @@ function Profile() {
     }
   };
 
-  const onSubmit = async function ({ username, email }) {
-    console.log(username, email, user._id);
+  const onSubmit = async function ({ username, email, password }) {
+    // console.log(username, email, user._id, password, formData.avatar);
+
+    let apiFormData = { username, email };
+
+    if (password !== "") {
+      apiFormData["password"] = password;
+    }
+
+    if (formData?.avatar) {
+      apiFormData["avatar"] = formData.avatar;
+    }
+
     try {
       dispatch(updateUserLoading());
       const res = await fetch(`/api/user/update/${user._id}`, {
@@ -172,11 +179,7 @@ function Profile() {
           // "Access-Control-Allow-Credentials": true,
           // mode: "no-cors",
         },
-        body: JSON.stringify({
-          username,
-          email,
-          // password,
-        }),
+        body: JSON.stringify(apiFormData),
       });
       const data = await res.json();
       if (data.status !== "success") {
@@ -232,7 +235,7 @@ function Profile() {
                 mb: "0.6rem",
               }}
               mx="auto"
-              // onClick={() => fileRef.current.click()}
+              onClick={() => fileRef.current.click()}
               alignSelf="center"
             />
             <Typography variant="body1">
@@ -310,14 +313,21 @@ function Profile() {
             {...register("email")}
             disabled={loading}
           />
-
-          <TextField
-            // id="outlined-basic"
+          <OutlinedInput
             id="outlined-adornment-password"
-            variant="outlined"
-            placeholder="Password"
-            {...register("password")}
             type={showPassword ? "text" : "password"}
+            sx={{
+              "&:hover, &.Mui-focused": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "solid 2px",
+                  borderColor: "brandColor.main",
+                },
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "solid 2px",
+                borderColor: "brandColor.light2",
+              },
+            }}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -326,12 +336,19 @@ function Profile() {
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showPassword ? (
+                    <VisibilityOff sx={{ color: "brandColor.main" }} />
+                  ) : (
+                    <Visibility sx={{ color: "brandColor.main" }} />
+                  )}
                 </IconButton>
               </InputAdornment>
             }
+            // label="Password"
+            placeholder="New Password"
+            {...register("password")}
+            disabled={loading}
           />
-
           <StyledButton
             variant="outlined"
             type="submit"

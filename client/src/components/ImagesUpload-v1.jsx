@@ -95,7 +95,7 @@ function ImagesUpload({
   // const [formData, setFormData] = useState({ imageUrls: [] });
   const [imageUploadError, setImageUploadError] = useState(null);
 
-  console.log(files);
+  // console.log(files);
   watch("imageUrls");
   // console.log(formData);
 
@@ -111,7 +111,7 @@ function ImagesUpload({
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-          console.log(`Upload is ${progress}% done`);
+          // console.log(`Upload is ${progress}% done`);
         },
         (error) => {
           reject(error);
@@ -150,7 +150,7 @@ function ImagesUpload({
         //   ...formData,
         //   imageUrls: formData.imageUrls.concat(urls),
         // });
-        console.log(getValues("imageUrls"));
+        // console.log(getValues("imageUrls"));
         setValue("imageUrls", getValues("imageUrls").concat(urls));
         setImageUploadError(null);
       })
@@ -161,7 +161,7 @@ function ImagesUpload({
   };
 
   const handleImageDelete = function (imgUrlDelete) {
-    console.log(imgUrlDelete);
+    // console.log(imgUrlDelete);
     // const newImageUrls = formData.imageUrls.filter(
     //   (imgUrl) => imgUrl !== imgUrlDelete
     // );
@@ -211,7 +211,7 @@ function ImagesUpload({
       cols,
     };
   });
-  console.log(itemData);
+  // console.log(itemData);
 
   return (
     <Box

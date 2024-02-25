@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  IconButton,
   InputAdornment,
   OutlinedInput,
   Stack,
@@ -16,7 +15,8 @@ function NewsLetter() {
         justifyContent: "center",
         alignItems: "center",
 
-        padding: "2.4rem 4.4rem 4.8rem 4.4rem",
+        // padding: "2.4rem 4.4rem 4.8rem 4.4rem",
+        padding: "4.4rem 4.4rem 6.2rem 4.4rem",
       }}
     >
       <Box

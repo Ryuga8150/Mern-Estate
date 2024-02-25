@@ -1,18 +1,25 @@
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
-import { Box, Divider, Link, Paper, Stack, Typography } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import BathroomIcon from "@mui/icons-material/Bathroom";
-import BedroomParentIcon from "@mui/icons-material/BedroomParent";
+// import BathroomIcon from "@mui/icons-material/Bathroom";
+// import BedroomParentIcon from "@mui/icons-material/BedroomParent";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
 import SquareFootIcon from "@mui/icons-material/SquareFoot";
 import BathtubOutlinedIcon from "@mui/icons-material/BathtubOutlined";
-import StraightenIcon from "@mui/icons-material/Straighten";
+// import StraightenIcon from "@mui/icons-material/Straighten";
 import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils/helpers";
+// import ShareIcon from "@mui/icons-material/Share";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 const ImageContainer = styled("div")({
   width: "100%",
   // overflow: "hidden",
@@ -38,9 +45,14 @@ function Card({
   hover = true,
 }) {
   const [favorite, setFavorite] = useState(false);
-
+  const navigate = useNavigate();
+  // Link component={RouterLink} to={`/listing/${listing._id}`}
   return (
-    <Link component={RouterLink} to={`/listing/${listing._id}`}>
+    <Box
+      onClick={() => {
+        navigate(`/listing/${listing._id}`);
+      }}
+    >
       <Paper
         sx={{
           padding: "1.2rem",
@@ -59,6 +71,13 @@ function Card({
           <ImageContainer>
             <Image src={listing.imageUrls[0]} alt="Property" />
           </ImageContainer>
+          {/* <Typography
+            variant="h4"
+            textAlign="center"
+            sx={{ fontSize: { md: "2rem" }, fontWeight: 600 }}
+          >
+            {listing.name}
+          </Typography> */}
           <Box>
             <Stack
               direction="row"
@@ -92,6 +111,7 @@ function Card({
                         }
                       : {
                           fontSize: { md: "1.6rem" },
+                          lineHeight: 1.75,
                         }),
 
                     fontWeight: 600,
@@ -101,51 +121,87 @@ function Card({
                 </Typography>
               </Stack>
 
-              {favorite ? (
-                <FavoriteIcon
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                {favorite ? (
+                  <FavoriteIcon
+                    sx={{
+                      color: "brandColor.main",
+                      "@keyframes scaleHeart": {
+                        "0%": {
+                          transform: "scale(0)",
+                        },
+                        "35%": {
+                          transform: "scale(0.35)",
+                        },
+                        "75%": {
+                          transform: "scale(0.75)",
+                        },
+                        "100%": {
+                          transform: "scale(1)",
+                        },
+                      },
+                      "@keyframes deScaleHeart": {
+                        "0%": {
+                          transform: "scale(2)",
+                        },
+                        "35%": {
+                          transform: "scale(1.75)",
+                        },
+                        "75%": {
+                          transform: "scale(1.35)",
+                        },
+                        "100%": {
+                          transform: "scale(1)",
+                        },
+                      },
+                      animation: "deScaleHeart 0.4s ease-in-out",
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // console.log(e);
+                      setFavorite(!favorite);
+                    }}
+                  />
+                ) : (
+                  <FavoriteBorderIcon
+                    sx={{
+                      color: "brandColor.main",
+                    }}
+                    onClick={(e) => {
+                      // console.log(e);
+                      e.stopPropagation();
+                      setFavorite(!favorite);
+                    }}
+                  />
+                )}
+                {/* <ShareIcon
                   sx={{
                     color: "brandColor.main",
-                    "@keyframes scaleHeart": {
-                      "0%": {
-                        transform: "scale(0)",
-                      },
-                      "35%": {
-                        transform: "scale(0.35)",
-                      },
-                      "75%": {
-                        transform: "scale(0.75)",
-                      },
-                      "100%": {
-                        transform: "scale(1)",
-                      },
-                    },
-                    "@keyframes deScaleHeart": {
-                      "0%": {
-                        transform: "scale(2)",
-                      },
-                      "35%": {
-                        transform: "scale(1.75)",
-                      },
-                      "75%": {
-                        transform: "scale(1.35)",
-                      },
-                      "100%": {
-                        transform: "scale(1)",
-                      },
-                    },
-                    animation: "deScaleHeart 0.4s ease-in-out",
+                    ml: 1,
                   }}
-                  onClick={() => setFavorite(!favorite)}
-                />
-              ) : (
-                <FavoriteBorderIcon
+                /> */}
+                <ContentCopyIcon
                   sx={{
                     color: "brandColor.main",
+                    ml: 1,
                   }}
-                  onClick={() => setFavorite(!favorite)}
                 />
-              )}
+              </Box>
             </Stack>
+
+            <Typography
+              variant="h4"
+              sx={{
+                fontSize: { md: "1.6rem" },
+                fontWeight: 400,
+                fontFamily: "sans-neue-heavy,sans-serif",
+                mt: 0,
+                color: "#23222A",
+              }}
+            >
+              {listing.name}
+            </Typography>
+
             <Typography
               variant="subtitle1"
               sx={{
@@ -228,7 +284,7 @@ function Card({
           </Stack>
         </Stack>
       </Paper>
-    </Link>
+    </Box>
   );
 }
 

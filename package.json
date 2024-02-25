@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "nodemon api/server.js",
     "prod": "set NODE_ENV=production&& nodemon api/server.js",
-    "start": "node api/server.js"
+    "start": "node api/server.js",
+    "install-server": "npm install",
+    "install-client": "npm install --prefix client",
+    "build": "npm run build --prefix client"
   },
   "author": "",
   "license": "ISC",

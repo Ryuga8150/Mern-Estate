@@ -6,12 +6,27 @@
 
 @font-face {
   font-family: editor;
-  src: url(./public/fonts/EditorsNoteOTF/Editor\'sNote-Bold.otf);
+  src: url(/fonts/EditorsNoteOTF/Editor\'sNote-Bold.otf);
 }
 
 @font-face {
   font-family: geranium;
-  src: url(./public/fonts/Geranium/Geranium.otf);
+  src: url(/fonts/Geranium/Geranium.otf);
+}
+
+@font-face {
+  font-family: sans-neue-black;
+  src: url(/fonts/Sans-Neue/Stawix\ -\ SoinSansNeue-Black.otf);
+}
+
+@font-face {
+  font-family: sans-neue-bold;
+  src: url(/fonts/Sans-Neue/Stawix\ -\ SoinSansNeue-Bold.otf);
+}
+
+@font-face {
+  font-family: sans-neue-heavy;
+  src: url(/fonts/Sans-Neue/Stawix\ -\ SoinSansNeue-Heavy.otf);
 }
 
 .sidebar {
@@ -28,10 +43,27 @@
 }
 
 .marker {
-  background-image: url("./public/images/pin.png");
+  background-image: url("/images/pin.png");
   background-size: cover;
   /* 32 40 */
   width: 32px;
   height: 40px;
   cursor: pointer;
+}
+
+.spinnerContainer {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  /* background: conic-gradient(#0000 10%, var(--color-light--2)); */
+  background: conic-gradient(#fafafa 10%, #0066ff);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  animation: rotate 1.5s infinite near;
 }

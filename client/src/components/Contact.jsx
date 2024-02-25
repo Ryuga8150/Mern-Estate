@@ -1,6 +1,7 @@
+import Button from "@mui/material/Button";
+
 import PropTypes from "prop-types";
-import { Button } from "@mui/material";
-import { Link, Link as RouterLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 Contact.propTypes = {
@@ -11,7 +12,7 @@ function Contact({ listing }) {
   // console.log(landlord);
   const navigate = useNavigate();
   const handleMail = function () {
-    console.log("In handle Mail");
+    // console.log("In handle Mail");
     navigate(
       `mailto:ryuga13.1.4@gmail.com?subject=Regarding ${listing.name}&body=Enter your message here`
     );
@@ -23,7 +24,12 @@ function Contact({ listing }) {
         try {
           const res = await fetch(`/api/user/${listing.userRef}`);
           const data = await res.json();
-
+          // console.log(data);
+          if (data.status !== "success") {
+            // console.log(`Error Fetching Landlord: ${data.message}`);
+            // console.log(data.message);
+            return;
+          }
           setLandlord(data.data.user);
         } catch (err) {
           console.log(err);

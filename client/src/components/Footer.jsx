@@ -1,5 +1,5 @@
 import { Box, Link, Stack, SvgIcon, Typography } from "@mui/material";
-import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
+// import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 
 function Footer() {
   return (

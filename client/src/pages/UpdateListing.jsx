@@ -1,5 +1,7 @@
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+
 import styled from "@emotion/styled";
-import { Box, Container } from "@mui/material";
 import ListingForm from "../components/ListingForm";
 import ImagesUpload from "../components/ImagesUpload";
 import { useForm } from "react-hook-form";
@@ -69,7 +71,7 @@ function UpdateListing() {
 
       const { state, city, ...apiData } = newFormData;
 
-      console.log(apiData);
+      // console.log(apiData);
 
       if (apiData.imageUrls.length === 0) return;
 
@@ -105,7 +107,7 @@ function UpdateListing() {
       const getListing = async () => {
         const res = await fetch(`/api/listing/get/${listingID}`);
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
 
         if (data.status !== "success") {
           console.log("Error at Update Listing Component");
@@ -123,7 +125,7 @@ function UpdateListing() {
 
   useEffect(
     function () {
-      console.log(listing);
+      // console.log(listing);
       if (listing === null || listing === undefined) return;
 
       reset({

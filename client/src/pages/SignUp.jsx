@@ -1,19 +1,20 @@
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Link from "@mui/material/Link";
+import OutlinedInput from "@mui/material/OutlinedInput";
+
 import styled from "@emotion/styled";
-import {
-  Button,
-  Container,
-  IconButton,
-  InputAdornment,
-  Link,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
 
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useState } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 const StyledContainer = styled(Container)({
@@ -49,11 +50,11 @@ function SignUp() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  console.log(isSubmitting);
+  // console.log(isSubmitting);
   const navigate = useNavigate();
   const onSubmit = async function (formData) {
     try {
-      console.log(formData);
+      // console.log(formData);
 
       reset();
       //return;
@@ -71,21 +72,21 @@ function SignUp() {
       });
 
       const resData = await res.json();
-      console.log("From Server");
-      console.log(resData);
+      // console.log("From Server");
+      // console.log(resData);
 
       if (resData.status === "success") {
-        console.log("In success");
+        // console.log("In success");
         toast.success("Signed Up SuccessFully");
         navigate("/sign-in");
       } else if (resData.status === "fail") {
-        console.log("In fail");
+        // console.log("In fail");
         toast.error(resData.message);
       } else {
         alert("Unhandled reposnse status in SgnUp");
       }
     } catch (err) {
-      alert("Client Side Error in Sign up ");
+      // alert("Client Side Error in Sign up ");
       console.log(err);
     }
   };
@@ -138,12 +139,12 @@ function SignUp() {
               },
             }}
           />
-          <TextField
-            // id="outlined-basic"
+
+          <OutlinedInput
             id="outlined-adornment-password"
-            variant="outlined"
+            type={showPassword ? "text" : "password"}
             sx={{
-              "& .MuiInputBase-root:hover, & .MuiInputBase-root.Mui-focused": {
+              "&:hover, &.Mui-focused": {
                 "& .MuiOutlinedInput-notchedOutline": {
                   border: "solid 2px",
                   borderColor: "brandColor.main",
@@ -153,20 +154,8 @@ function SignUp() {
                 border: "solid 2px",
                 borderColor: "brandColor.light2",
               },
+              marginBottom: "16px !important",
             }}
-            placeholder="Password"
-            {...register("password")}
-            // sx={{
-            //   width: 300,
-            //   ".MuiOutlinedInput-root": {
-            //     "&:hover": {
-            //       borderRadius: 50,
-            //       borderColor: "transparent",
-            //       borderWidth: 10,
-            //     },
-            //   },
-            // }}
-            type={showPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -175,12 +164,19 @@ function SignUp() {
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showPassword ? (
+                    <VisibilityOff sx={{ color: "brandColor.main" }} />
+                  ) : (
+                    <Visibility sx={{ color: "brandColor.main" }} />
+                  )}
                 </IconButton>
               </InputAdornment>
             }
+            // label="Password"
+            placeholder="Password"
+            {...register("password")}
+            disabled={isSubmitting}
           />
-
           <StyledButton
             variant="contained"
             type="submit"

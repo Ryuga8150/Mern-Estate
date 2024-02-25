@@ -1,5 +1,7 @@
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+
 import styled from "@emotion/styled";
-import { Box, Container } from "@mui/material";
 import ListingForm from "../components/ListingForm";
 import ImagesUpload from "../components/ImagesUpload";
 import { useForm } from "react-hook-form";
@@ -58,14 +60,14 @@ function CreateListing() {
 
   const { currentUser } = useSelector((store) => store.user);
   const { user } = currentUser ? currentUser.data : {};
-  console.log(user);
+  // console.log(user);
 
   const navigate = useNavigate();
 
   const onSubmit = async function (formData) {
     // return;
     try {
-      console.log(formData);
+      // console.log(formData);
 
       // console.log("END");
       const newFormData = {
@@ -84,7 +86,7 @@ function CreateListing() {
 
       const { state, city, ...apiData } = newFormData;
 
-      console.log(apiData);
+      // console.log(apiData);
       // const newFormData = {
       //   ...formData,
       //   bathrooms: +formData.baths,
@@ -102,7 +104,7 @@ function CreateListing() {
       // if (apiData.offer && apiData.discountPrice === 0) return;
       if (apiData.offer && apiData.discount === 0) return;
 
-      console.log("Sending...");
+      // console.log("Sending...");
       const res = await fetch("/api/listing/create", {
         // Adding method type
         method: "POST",
@@ -116,8 +118,8 @@ function CreateListing() {
         },
       });
       const data = await res.json();
-      console.log(data);
-      console.log(data.data.listing._id);
+      // console.log(data);
+      // console.log(data.data.listing._id);
       // 65aae01aec006b2d46a5002f
 
       if (data.status !== "success") {

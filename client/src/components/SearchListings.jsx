@@ -1,11 +1,15 @@
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
 import PropTypes from "prop-types";
-import { Box, Stack, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import Card from "../components/Card";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import SortIcon from "@mui/icons-material/Sort";
+import SkeletonCard from "./SkeletonCard";
 
 SearchListings.propTypes = {
   listings: PropTypes.array,
@@ -38,17 +42,17 @@ function SearchListings() {
     function () {
       const fetchListings = async () => {
         try {
-          console.log("In API GET Listings");
+          // console.log("In API GET Listings");
 
           let query = [];
 
           const searchTerm = searchParams.get("searchTerm");
           query.push("searchTerm=" + searchTerm);
-          console.log(searchTerm);
+          // console.log(searchTerm);
 
           const priceRange = searchParams.get("price");
           if (priceRange) query.push("price=" + priceRange);
-          console.log(priceRange);
+          // console.log(priceRange);
 
           const type = searchParams.get("type");
           if (type) query.push("type=" + type);
@@ -58,7 +62,7 @@ function SearchListings() {
             query.push("benefits=" + JSON.stringify(benefits));
 
           const facilities = searchParams.getAll("facilities");
-          console.log(facilities);
+          // console.log(facilities);
           if (facilities.length > 0)
             query.push("facilities=" + JSON.stringify(facilities));
 
@@ -71,14 +75,14 @@ function SearchListings() {
           const discounts = searchParams.getAll("discount");
           if (discounts.length > 0)
             query.push("discount=" + JSON.stringify(discounts));
-          console.log(discounts);
+          // console.log(discounts);
 
           const apiQueryParams = query.join("&");
-          console.log(apiQueryParams);
+          // console.log(apiQueryParams);
 
           const res = await fetch(`/api/listing/get?${apiQueryParams}`);
           const data = await res.json();
-          console.log(data);
+          // console.log(data);
           setListings(data.data.listings);
         } catch (err) {
           console.log(err);
@@ -89,9 +93,7 @@ function SearchListings() {
     [searchParams]
   );
 
-  if (!listings) return <span>Loading...</span>;
-
-  if (listings.length === 0) return <span>Sorry! No Listings present</span>;
+  // if (!listings) return <span>Loading...</span>;
 
   return (
     <Box
@@ -104,7 +106,12 @@ function SearchListings() {
       }}
     >
       <Stack spacing={2}>
-        <Typography variant="h4">Your Listings: </Typography>
+        <Typography
+          variant="h4"
+          sx={{ marginLeft: "8px !important", fontWeight: 500 }}
+        >
+          Your Listings
+        </Typography>
         <Stack
           spacing={5}
           direction="row"
@@ -115,7 +122,15 @@ function SearchListings() {
             },
           }}
         >
-          {/* <SortIcon sx={{ pl: 2 }} /> */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              marginTop: "1.6px !important",
+            }}
+          >
+            <SortIcon sx={{ ml: 1, width: "1.1em", height: "1.1em" }} />
+          </Box>
           {[
             { label: "Latest", sortBy: "createdAt", order: "desc" },
             { label: "Oldest", sortBy: "createdAt", order: "asc" },
@@ -134,7 +149,7 @@ function SearchListings() {
               key={ind}
               variant="subtitle1"
               sx={{
-                ...(ind === 0 && { marginTop: "2px !important" }),
+                ...(ind === 0 && { marginLeft: "20px !important" }),
                 ...(activeSortIndex === ind
                   ? { bgcolor: "#23222A", color: "#FAFAFA" }
                   : { bgcolor: "#f5f5f5", color: "#7D7D7D" }),
@@ -143,7 +158,7 @@ function SearchListings() {
               onClick={() => {
                 setActiveSortIndex(ind);
                 setSearchParams((searchParams) => {
-                  console.log("Clicked");
+                  // console.log("Clicked");
                   searchParams.set("sortBy", sortBy);
                   searchParams.set("order", order);
                   return searchParams;
@@ -162,7 +177,8 @@ function SearchListings() {
             // overflowY: "auto",
             // overflowX: "scroll",
             columnGap: 3,
-            rowGap: 2.5,
+            // rowGap: 2.5,
+            rowGap: 4,
             pt: 1,
             pl: 1,
             pr: 1,
@@ -171,8 +187,14 @@ function SearchListings() {
             // height: "100%",
           }}
         >
-          {!listings && <span>Loading...</span>}
+          {!listings &&
+            Array.from(Array(6).keys()).map((id) => (
+              <SkeletonCard key={id} hover={false} />
+            ))}
+
+          {listings?.length === 0 && <span>No Listings Found...</span>}
           {listings &&
+            listings.length > 0 &&
             listings.map((listing) => (
               <Card
                 key={listing._id}

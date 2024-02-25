@@ -1,5 +1,8 @@
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+
 import styled from "@emotion/styled";
-import { Container, Box, Divider } from "@mui/material";
 import HeroSection from "../components/HeroSection";
 import Header from "../components/Header";
 import ProductReel from "../components/ProductReel";
@@ -34,9 +37,15 @@ function Home() {
         <Header isHome={true} />
         <HeroSection />
       </StyledBox>
-      <ProductReel label={"Recent Offers"} url="&offer=true" />
+      <ProductReel
+        label={"Recent Offers"}
+        url={`&discount=["moreThanOrEqualTo10"]`}
+      />
       <Divider />
-      <ProductReel label={"Recent Properties"} />
+      <ProductReel
+        label={"Recent Properties"}
+        url={`&discount=["moreThanOrEqualTo10"]`}
+      />
       <Divider />
       <FAQSection />
       <NewsLetter />

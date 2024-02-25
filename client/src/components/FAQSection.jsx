@@ -1,16 +1,14 @@
 import Accordion from "@mui/material/Accordion";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import FAQIcon from "./../../public/images/faq.svg";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+// import FAQIcon from "./../../public/images/faq.svg";
 import styled from "@emotion/styled";
 import { useState } from "react";
 

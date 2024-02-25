@@ -1,24 +1,16 @@
-import styled from "@emotion/styled";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Link,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
-import { Link as RouterLink, useParams } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+
 import BathroomIcon from "@mui/icons-material/Bathroom";
 import BedroomParentIcon from "@mui/icons-material/BedroomParent";
 import SquareFootIcon from "@mui/icons-material/SquareFoot";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 import HouseIcon from "@mui/icons-material/House";
-import BalconyIcon from "@mui/icons-material/Balcony";
+// import BalconyIcon from "@mui/icons-material/Balcony";
 import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import WaterIcon from "@mui/icons-material/Water";
 import ElectricBoltIcon from "@mui/icons-material/ElectricBolt";
@@ -33,14 +25,21 @@ import LightIcon from "@mui/icons-material/Light";
 // exterior lighting
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import MapIcon from "@mui/icons-material/Map";
+
+import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useParams } from "react-router-dom";
+
 // Open floor plan
 import ImageSlider from "../components/ImageSlider";
 
 import LocationMap from "../components/LocationMap";
-import FAQSection from "../components/FAQSection";
-import { useSelector } from "react-redux";
+// import FAQSection from "../components/FAQSection";
+
 import Contact from "../components/Contact";
 import { formatCurrency } from "../../utils/helpers";
+import SkeletonListing from "../components/SkeletonListing";
 
 // #9EAAA9
 // #FAFAFA
@@ -56,40 +55,39 @@ const StyledGrid = styled(Box)({
 });
 
 function Listing() {
-  const [listing, setListing] = useState(null);
+  const [listing, setListing] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const { listingID } = useParams();
+  // console.log(listing);
 
-  console.log(listing);
-
-  const { currentUser } = useSelector((store) => {
-    // console.log(store);
-    return store.user;
-  });
-  const { user } = currentUser ? currentUser.data : {};
+  // const { currentUser } = useSelector((store) => {
+  //   // console.log(store);
+  //   return store.user;
+  // });
+  // const { user } = currentUser ? currentUser.data : {};
 
   useEffect(
     function () {
       const fetchListing = async () => {
         try {
+          setError(false);
           setLoading(true);
+          // console.log(listingID);
           const res = await fetch(`/api/listing/get/${listingID}`);
           const data = await res.json();
           if (data.status !== "success") {
-            console.log("Error at Listing Component API Call");
-            // console.log(data);
-            setError(data.message);
-            setLoading(false);
-            return;
+            // console.log("Error at Listing Component API Call");
+            throw new Error(data.message);
           }
           // console.log(data);
           setListing(data.data.listing);
           setLoading(false);
         } catch (err) {
           console.log(err);
+          setError(true);
           setLoading(false);
-          setError(err);
+          toast.error(err.message);
         }
       };
       fetchListing();
@@ -97,17 +95,13 @@ function Listing() {
     [listingID]
   );
 
-  useEffect(
-    function () {
-      if (error) {
-        toast.error(error);
-        setError(null);
-      }
-    },
-    [error]
-  );
+  if (loading) return <SkeletonListing />;
 
-  if (loading || !listing) return <span>Loading...</span>;
+  if (error) return <span>Error While Fetching Data..</span>;
+
+  // if (loading || !listing) return <span>Loading...</span>;
+
+  if (listing.length === 0) return;
 
   return (
     <StyledContainer
@@ -437,7 +431,7 @@ function Listing() {
               Location
             </Typography>
             <Paper sx={{ borderRadius: 5 }} elevation={5}>
-              {/* <LocationMap /> */}
+              <LocationMap />
             </Paper>
           </Stack>
         </StyledGrid>
