@@ -21,10 +21,12 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listRouter);
 
-app.use(express.static(path.join(__dirname, "/client/dist")));
+// const pathNew = path.join(__dirname, "..", "/client/dist");
+// console.log(__dirname, pathNew);
+app.use(express.static(path.join(__dirname, "..", "/client/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
 });
 
 app.all("*", (req, res, next) => {
