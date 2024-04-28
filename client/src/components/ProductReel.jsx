@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import Card from "./Card";
 import SkeletonCard from "./SkeletonCard";
+import { Link as RouterLink } from "react-router-dom";
 
 ProductReel.propTypes = {
   label: PropTypes.string,
   url: PropTypes.string,
+  redirectUrl: PropTypes.string,
 };
-function ProductReel({ label, url = "" }) {
+function ProductReel({ label, url = "", redirectUrl }) {
   const [listings, setListings] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -27,7 +29,7 @@ function ProductReel({ label, url = "" }) {
           setError(false);
           const res = await fetch(`/api/listing/get?limit=3${url}`);
           const data = await res.json();
-          // console.log(data);
+          console.log(data);
           setLoading(false);
           setListings(data.data.listings);
         } catch (err) {
@@ -76,7 +78,10 @@ function ProductReel({ label, url = "" }) {
               fontSize: {
                 md: "1rem",
               },
+              cursor: "pointer",
             }}
+            component={RouterLink}
+            to={redirectUrl}
           >
             See All Listings &rarr;
           </Link>

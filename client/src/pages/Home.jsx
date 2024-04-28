@@ -40,11 +40,12 @@ function Home() {
       <ProductReel
         label={"Recent Offers"}
         url={`&discount=["moreThanOrEqualTo10"]`}
+        redirectUrl={`/search?searchTerm=&discount=moreThanOrEqualTo10`}
       />
       <Divider />
       <ProductReel
         label={"Recent Properties"}
-        url={`&discount=["moreThanOrEqualTo10"]`}
+        redirectUrl={`/search?searchTerm=&sortBy=createdAt&order=desc`}
       />
       <Divider />
       <FAQSection />
